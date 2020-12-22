@@ -1,0 +1,3 @@
+dependencies {
+    api 'cn.featherfly.common:common-http:0.4.0'
+}

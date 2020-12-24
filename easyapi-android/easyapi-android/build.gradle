@@ -1,5 +1,4 @@
-apply from: rootDir.getAbsolutePath() +  '/android_lib.gradle'
-apply from: rootDir.getAbsolutePath() +  '/android_maven_push.gradle'
+apply from: rootDir.getAbsolutePath() +  '/android_maven_publish.gradle'
 
 android {
     compileSdkVersion 30

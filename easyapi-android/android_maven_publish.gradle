@@ -113,17 +113,14 @@ project.afterEvaluate {
                         }
                         // List all "compile" dependencies (for old Gradle)
                         configurations.compile.getAllDependencies().each { dep ->
-                            println(dep)
                             addDependency(dep, "compile")
                         }
                         // List all "api" dependencies (for new Gradle) as "compile" dependencies
                         configurations.api.getAllDependencies().each { dep ->
-                            println(dep)
                             addDependency(dep, "compile")
                         }
                         // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
                         configurations.implementation.getAllDependencies().each { dep ->
-                            println(dep)
                             addDependency(dep, "runtime")
                         }
                     }

@@ -5,7 +5,7 @@ import java.util.Map;
 import cn.featherfly.common.http.ErrorListener;
 import cn.featherfly.common.http.HttpMethod;
 import cn.featherfly.easyapi.Result;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * The Class HttpSendBodyApiInvoker.
@@ -47,8 +47,8 @@ public class HttpSendBodyApiInvoker<T extends Result<?>> extends ApiInvoker<T> {
      * {@inheritDoc}
      */
     @Override
-    public void invoke(CallBack<T> callBack) {
-        httpRequest.send(method, url, requestBody, headers, responseType, callBack);
+    public T invoke() {
+        return httpRequest.send(method, url, requestBody, headers, responseType);
     }
 
     /**
@@ -63,7 +63,15 @@ public class HttpSendBodyApiInvoker<T extends Result<?>> extends ApiInvoker<T> {
      * {@inheritDoc}
      */
     @Override
-    public HttpRequestCompletion<T> invokeCompletion() {
+    public void invoke(CallBack<T> callBack) {
+        httpRequest.send(method, url, requestBody, headers, responseType, callBack);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public HttpRequestCompletion<T> complete() {
         return httpRequest.sendCompletion(method, url, requestBody, headers, responseType);
     }
 
@@ -71,7 +79,7 @@ public class HttpSendBodyApiInvoker<T extends Result<?>> extends ApiInvoker<T> {
      * {@inheritDoc}
      */
     @Override
-    public Observable<Completion<T>> invokeObservable() {
+    public Observable<Completion<T>> observable() {
         return httpRequest.sendObservable(method, url, requestBody, headers, responseType);
     }
 }

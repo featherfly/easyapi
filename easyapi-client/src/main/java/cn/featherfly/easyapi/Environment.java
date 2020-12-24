@@ -46,4 +46,22 @@ public interface Environment {
      * @return true, if is debug enable
      */
     boolean isDebugEnable();
+
+    /**
+     * Gets the.
+     *
+     * @param <O> the generic type
+     * @param key the key
+     * @return the o
+     */
+    <O> O get(String key);
+
+    /**
+     * Gets the.
+     *
+     * @param <O>  the generic type
+     * @param type the type
+     * @return the o
+     */
+    <O> O get(Class<O> type);
 }

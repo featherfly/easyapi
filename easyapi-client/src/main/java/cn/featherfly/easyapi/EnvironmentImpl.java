@@ -1,5 +1,8 @@
 package cn.featherfly.easyapi;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.featherfly.common.app.Platform;
 import cn.featherfly.common.app.Version;
 import cn.featherfly.common.location.LocationPoint;
@@ -21,6 +24,14 @@ public class EnvironmentImpl implements Environment {
     private User currentUser;
 
     private boolean debugEnable;
+
+    private Map<String, Object> map = new HashMap<>();
+
+    /**
+     * Instantiates a new environment store.
+     */
+    public EnvironmentImpl() {
+    }
 
     /**
      * get location value.
@@ -111,5 +122,49 @@ public class EnvironmentImpl implements Environment {
      */
     public void setDebugEnable(boolean debugEnable) {
         this.debugEnable = debugEnable;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <O> O get(String key) {
+        return (O) map.get(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <O> O get(Class<O> type) {
+        return get(type.getClass().getName());
+    }
+
+    /**
+     * Put.
+     *
+     * @param <O> the generic type
+     * @param key the key
+     * @param obj the obj
+     * @return the environment impl
+     */
+    public <O> EnvironmentImpl put(String key, O obj) {
+        map.put(key, obj);
+        return this;
+    }
+
+    /**
+     * Put.
+     *
+     * @param <O> the generic type
+     * @param obj the obj
+     * @return the environment impl
+     */
+    public <O> EnvironmentImpl put(O obj) {
+        if (obj != null) {
+            put(obj.getClass().getName(), obj);
+        }
+        return this;
     }
 }

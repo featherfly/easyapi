@@ -14,8 +14,8 @@ import cn.featherfly.common.http.HttpMethod;
 import cn.featherfly.common.http.HttpRequestConfig;
 import cn.featherfly.easyapi.Environment;
 import cn.featherfly.easyapi.Result;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * AbstractHttpRequest.
@@ -83,6 +83,26 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     //            Class<T> responseType, final CallBack<T> callBack) {
     //        send(HttpMethod.PUT, url, requestBody, headers, responseType, callBack);
     //    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <R, T extends Result<?>> T send(HttpMethod method, String url, R requestBody, Map<String, String> headers,
+            Class<T> responseType) {
+        final String finalUrl = preSend(method, url, requestBody, headers, responseType);
+        return client.request(method, finalUrl, requestBody, headers, responseType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T extends Result<?>> T send(HttpMethod method, String url, Map<String, Serializable> params,
+            Map<String, String> headers, Class<T> responseType) {
+        final String finalUrl = preSend(method, url, params, headers, responseType);
+        return client.request(method, finalUrl, params, headers, responseType);
+    }
 
     /**
      * {@inheritDoc}

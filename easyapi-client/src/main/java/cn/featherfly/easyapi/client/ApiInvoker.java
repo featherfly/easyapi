@@ -5,7 +5,7 @@ import java.util.Map;
 import cn.featherfly.common.http.ErrorListener;
 import cn.featherfly.common.http.HttpMethod;
 import cn.featherfly.easyapi.Result;
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 /**
  * The Class ApiInvoker.
@@ -137,6 +137,21 @@ public abstract class ApiInvoker<T extends Result<?>> {
     }
 
     /**
+     * 同步调用，当出错时抛出异常.
+     *
+     * @return the t
+     */
+    public abstract T invoke();
+
+    /**
+     * 同步调用. 当错误时返回null.
+     *
+     * @param errorListener 错误监听器
+     * @return the t
+     */
+    public abstract T invoke(ErrorListener errorListener);
+
+    /**
      * 异步调用.
      *
      * @param callBack 回调
@@ -148,30 +163,13 @@ public abstract class ApiInvoker<T extends Result<?>> {
      *
      * @return the http request completion
      */
-    public abstract HttpRequestCompletion<T> invokeCompletion();
+    public abstract HttpRequestCompletion<T> complete();
 
     /**
      * Invoke completion.
      *
      * @return the http request completion
      */
-    public abstract Observable<Completion<T>> invokeObservable();
+    public abstract Observable<Completion<T>> observable();
 
-    /**
-     * 同步调用.
-     *
-     * @param errorListener 错误监听器
-     * @return the t
-     */
-    public abstract T invoke(ErrorListener errorListener);
-
-    /**
-     * 同步调用，忽略网络错误.
-     *
-     * @return the t
-     */
-    public T invoke() {
-        return invoke(error -> {
-        });
-    }
 }

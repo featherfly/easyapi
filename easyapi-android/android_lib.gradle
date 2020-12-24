@@ -1,5 +1,16 @@
 apply plugin: 'com.android.library'
 
+android {
+    compileOptions.encoding = "UTF-8"
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${archivesBaseName}-${version}.aar"
+        }
+    }
+}
+
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     //options.compilerArgs << "-parameters"
@@ -8,6 +19,7 @@ tasks.withType(JavaCompile) {
 tasks.withType(Javadoc) {
     options.encoding = "UTF-8"
 }
+
 
 repositories {
     mavenLocal()

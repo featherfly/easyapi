@@ -1,6 +1,5 @@
-plugins {
-    id 'com.android.library'
-}
+apply from: rootDir.getAbsolutePath() +  '/android_lib.gradle'
+apply from: rootDir.getAbsolutePath() +  '/android_maven_push.gradle'
 
 android {
     compileSdkVersion 30
@@ -10,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,6 +31,8 @@ dependencies {
     api 'cn.featherfly.common:common-flux:0.1.0'
     api 'cn.featherfly.easyapi:easyapi-client:0.1.0'
     api 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    implementation 'com.github.dcendents:android-maven-gradle-plugin:2.1'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'

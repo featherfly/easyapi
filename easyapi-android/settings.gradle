@@ -1,0 +1,3 @@
+include ':easyapi-android'
+include ':app'
+rootProject.name = "easyapi-android"

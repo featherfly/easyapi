@@ -33,9 +33,8 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     /**
      * Instantiates a new abstract http request.
      *
-     * @param environment  the environment
-     * @param client       the client
-     * @param rxjavaClient the rxjava client
+     * @param environment the environment
+     * @param client      the client
      */
     public AbstractHttpRequest(Environment environment, HttpClients client) {
         this.environment = environment;

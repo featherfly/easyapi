@@ -1,17 +1,15 @@
 package cn.featherfly.easyapi.client;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.featherfly.common.http.ErrorListener;
-import cn.featherfly.common.http.HttpClient;
+import cn.featherfly.common.http.HttpClients;
 import cn.featherfly.common.http.HttpErrorResponse;
 import cn.featherfly.common.http.HttpMethod;
-import cn.featherfly.common.http.HttpRequestConfig;
 import cn.featherfly.easyapi.Environment;
 import cn.featherfly.easyapi.Result;
 import io.reactivex.rxjava3.core.Observable;
@@ -24,9 +22,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  */
 public abstract class AbstractHttpRequest implements HttpRequest {
 
+    /** The logger. */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private HttpClient client;
+    private HttpClients client;
 
     /** The environment. */
     protected Environment environment;
@@ -34,23 +33,30 @@ public abstract class AbstractHttpRequest implements HttpRequest {
     /**
      * Instantiates a new abstract http request.
      *
-     * @param environment the environment
-     * @param config      the config
+     * @param environment  the environment
+     * @param client       the client
+     * @param rxjavaClient the rxjava client
      */
-    public AbstractHttpRequest(Environment environment, HttpRequestConfig config) {
-        this(environment, new HttpClient(config, new HashMap<>()));
-    }
-
-    /**
-     * Instantiates a new abstract http request.
-     *
-     * @param environment the environment
-     * @param client      the client
-     */
-    public AbstractHttpRequest(Environment environment, HttpClient client) {
+    public AbstractHttpRequest(Environment environment, HttpClients client) {
         this.environment = environment;
         this.client = client;
     }
+
+    //    /**
+    //     * Instantiates a new abstract http request.
+    //     *
+    //     * @param environment  the environment
+    //     * @param client       the client
+    //     * @param asyncClient  the async client
+    //     * @param rxjavaClient the rxjava client
+    //     */
+    //    public AbstractHttpRequest(Environment environment, HttpClient client, HttpAsyncClient asyncClient,
+    //            HttpRxjavaClient rxjavaClient) {
+    //        this.environment = environment;
+    //        this.client = client;
+    //        this.asyncClient = asyncClient;
+    //        this.rxjavaClient = rxjavaClient;
+    //    }
 
     //    /**
     //     * Post body.
@@ -232,7 +238,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
             R requestBody, Map<String, String> headers, Class<T> responseType) {
         final String finalUrl = preSend(method, url, requestBody, headers, responseType);
         final HttpRequestCompletionImpl<T> completion = new HttpRequestCompletionImpl<>();
-        client.requestObservable(method, finalUrl, requestBody, headers, responseType).subscribe(t -> {
+        client.requestCompletion(method, finalUrl, requestBody, headers, responseType).completion(t -> {
             if (t.isSuccess()) {
                 completion.setSuccess(t);
             } else {
@@ -277,7 +283,7 @@ public abstract class AbstractHttpRequest implements HttpRequest {
             Map<String, Serializable> params, Map<String, String> headers, Class<T> responseType) {
         final String finalUrl = preSend(method, url, params, headers, responseType);
         final HttpRequestCompletionImpl<T> completion = new HttpRequestCompletionImpl<>();
-        client.requestObservable(method, finalUrl, params, headers, responseType).subscribe(t -> {
+        client.requestCompletion(method, finalUrl, params, headers, responseType).completion(t -> {
             if (t.isSuccess()) {
                 completion.setSuccess(t);
             } else {

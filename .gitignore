@@ -3,5 +3,6 @@
 **/.gradle
 **/.settings
 **/.sts4-cache
+**/.idea
 .classpath
 .project

@@ -2,9 +2,8 @@ package cn.featherfly.easyapi.client;
 
 import java.util.Map;
 
-import cn.featherfly.common.http.HttpClient;
+import cn.featherfly.common.http.HttpClients;
 import cn.featherfly.common.http.HttpMethod;
-import cn.featherfly.common.http.HttpRequestConfig;
 import cn.featherfly.easyapi.Environment;
 import cn.featherfly.easyapi.Result;
 
@@ -21,18 +20,8 @@ public class DefaultHttpRequest extends AbstractHttpRequest {
      * @param environment the environment
      * @param client      the client
      */
-    public DefaultHttpRequest(Environment environment, HttpClient client) {
+    public DefaultHttpRequest(Environment environment, HttpClients client) {
         super(environment, client);
-    }
-
-    /**
-     * Instantiates a new default http request.
-     *
-     * @param environment the environment
-     * @param config      the config
-     */
-    public DefaultHttpRequest(Environment environment, HttpRequestConfig config) {
-        super(environment, config);
     }
 
     /**

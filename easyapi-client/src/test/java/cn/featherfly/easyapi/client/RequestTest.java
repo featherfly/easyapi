@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.testng.annotations.Test;
 
 import cn.featherfly.common.http.ErrorListener;
-import cn.featherfly.common.http.HttpClient;
+import cn.featherfly.common.http.HttpClients;
 import cn.featherfly.common.http.HttpMethod;
 import cn.featherfly.easyapi.EnvironmentImpl;
 
@@ -22,7 +22,7 @@ public class RequestTest {
 
     @Test
     public void testServer() {
-        HttpClient client = new HttpClient();
+        HttpClients client = new HttpClients();
         DefaultHttpRequest request = new DefaultHttpRequest(new EnvironmentImpl(), client);
 
         String url = "http://sfp.device.cdzkdc.com/api/v1/device/bd60ee0f054f4e7d";
@@ -90,7 +90,7 @@ public class RequestTest {
 
     @Test
     public void testServer2() {
-        HttpClient client = new HttpClient();
+        HttpClients client = new HttpClients();
         DefaultHttpRequest request = new DefaultHttpRequest(new EnvironmentImpl(), client);
 
         String url = "http://sfp.device.cdzkdc.com/api/v1/device/bd60ee0f054f4e7d";

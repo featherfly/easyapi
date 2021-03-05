@@ -1,6 +1,6 @@
 package cn.featherfly.easyapi;
 
-import cn.featherfly.common.http.HttpClient;
+import cn.featherfly.common.http.HttpClients;
 import cn.featherfly.easyapi.client.HttpRequest;
 
 /**
@@ -14,7 +14,7 @@ public final class ApiUtils {
 
     private static Environment defaultEnvironment;
 
-    private static HttpClient httpClient;
+    private static HttpClients httpClient;
 
     /**
      * Gets the default http request.
@@ -94,7 +94,7 @@ public final class ApiUtils {
      *
      * @return the default http client
      */
-    public static HttpClient getDefaultHttpClient() {
+    public static HttpClients getDefaultHttpClient() {
         if (httpClient == null) {
             throw new IllegalArgumentException("defaultHttpRequestConfig未设置");
         }
@@ -106,7 +106,7 @@ public final class ApiUtils {
      *
      * @param httpClient the new default http request config
      */
-    public static void setDefaultHttpRequestConfig(HttpClient httpClient) {
+    public static void setDefaultHttpRequestConfig(HttpClients httpClient) {
         ApiUtils.httpClient = httpClient;
     }
 }

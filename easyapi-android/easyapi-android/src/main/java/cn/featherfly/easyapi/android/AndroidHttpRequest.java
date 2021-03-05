@@ -1,8 +1,7 @@
 package cn.featherfly.easyapi.android;
 
-import cn.featherfly.common.http.HttpClient;
+import cn.featherfly.common.http.HttpClients;
 import cn.featherfly.common.http.HttpMethod;
-import cn.featherfly.common.http.HttpRequestConfig;
 import cn.featherfly.easyapi.Environment;
 import cn.featherfly.easyapi.Result;
 
@@ -19,19 +18,9 @@ public class AndroidHttpRequest extends AbstractAndroidHttpRequest {
      * Instantiates a new Abstract http request.
      *
      * @param environment the environment
-     * @param config      the config
-     */
-    public AndroidHttpRequest(Environment environment, HttpRequestConfig config) {
-        super(environment, config);
-    }
-
-    /**
-     * Instantiates a new Abstract http request.
-     *
-     * @param environment the environment
      * @param client      the client
      */
-    public AndroidHttpRequest(Environment environment, HttpClient client) {
+    public AndroidHttpRequest(Environment environment, HttpClients client) {
         super(environment, client);
     }
 

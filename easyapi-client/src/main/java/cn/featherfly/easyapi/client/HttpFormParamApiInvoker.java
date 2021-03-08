@@ -1,5 +1,6 @@
 package cn.featherfly.easyapi.client;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import cn.featherfly.common.http.ErrorListener;
@@ -16,7 +17,7 @@ import io.reactivex.rxjava3.core.Observable;
 public class HttpFormParamApiInvoker<T extends Result<?>> extends ApiInvoker<T> {
 
     /** The params. */
-    protected Map<String, String> params;
+    protected Map<String, Serializable> params;
 
     /**
      * Instantiates a new http form param api invoker.
@@ -28,7 +29,7 @@ public class HttpFormParamApiInvoker<T extends Result<?>> extends ApiInvoker<T> 
      * @param responseType the response type
      * @param httpRequest  the http request
      */
-    public HttpFormParamApiInvoker(HttpMethod method, String url, Map<String, String> params,
+    public HttpFormParamApiInvoker(HttpMethod method, String url, Map<String, Serializable> params,
             Map<String, String> headers, Class<T> responseType, HttpRequest httpRequest) {
         super(method, url, headers, responseType, httpRequest);
         this.params = params;
@@ -39,7 +40,7 @@ public class HttpFormParamApiInvoker<T extends Result<?>> extends ApiInvoker<T> 
      *
      * @return the params
      */
-    public Map<String, String> getParams() {
+    public Map<String, Serializable> getParams() {
         return params;
     }
 

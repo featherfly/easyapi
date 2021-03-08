@@ -1,3 +1,6 @@
+# 0.2.2 2021-03-08
+1. 修复HttpFormParamApiInvoker参数类型错误导致请求出错
+
 # 0.2.1 2021-03-07
 1. 加入EmptyDataResult
 2. 升级common-model-api

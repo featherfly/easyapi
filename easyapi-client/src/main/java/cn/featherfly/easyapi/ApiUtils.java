@@ -106,7 +106,7 @@ public final class ApiUtils {
      *
      * @param httpClient the new default http request config
      */
-    public static void setDefaultHttpRequestConfig(HttpClients httpClient) {
+    public static void setDefaultHttpClient(HttpClients httpClient) {
         ApiUtils.httpClient = httpClient;
     }
 }

@@ -1,5 +1,6 @@
 # 0.2.3 
 1. 升级common-serialization:0.2.2以解决android调试卡死的问题
+2. 升级common-http:0.5.2
 
 # 0.2.2 2021-03-08
 1. 修复HttpFormParamApiInvoker参数类型错误导致请求出错

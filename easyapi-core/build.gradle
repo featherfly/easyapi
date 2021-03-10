@@ -1,4 +1,4 @@
 dependencies {
     api 'cn.featherfly.common:common-model-api:0.2.2'
-    api 'cn.featherfly.common:common-serialization:0.2.0'
+    api 'cn.featherfly.common:common-serialization:0.2.2'
 }

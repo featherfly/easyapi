@@ -27,8 +27,10 @@ android {
 }
 
 dependencies {
+    api 'cn.featherfly.common:common-api:0.2.9'
+    api 'cn.featherfly.common:common-core:1.8.29'
     api 'cn.featherfly.common:common-flux:0.2.0'
-    api 'cn.featherfly.easyapi:easyapi-client:0.2.0'
+    api 'cn.featherfly.easyapi:easyapi-client:0.3.0'
     api 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
     implementation 'com.github.dcendents:android-maven-gradle-plugin:2.1'

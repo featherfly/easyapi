@@ -24,7 +24,7 @@ public class EnvironmentStore extends Store<EnvironmentAction<?>> implements Env
     /**
      * The constant ENV.
      */
-    public static final EnvironmentStore ENV = new EnvironmentStore();
+    public static final EnvironmentStore INSTANCE = new EnvironmentStore();
 
     private EnvironmentImpl environment = new EnvironmentImpl();
 
@@ -64,7 +64,7 @@ public class EnvironmentStore extends Store<EnvironmentAction<?>> implements Env
      * @return the environment store
      */
     public static EnvironmentStore get() {
-        return ENV;
+        return INSTANCE;
     }
 
     @Override

@@ -8,11 +8,11 @@ import cn.featherfly.easyapi.client.HttpRequest;
  */
 public final class ApiUtils {
 
-    private static HttpRequest defaultHttpRequest;
+    private static HttpRequestManager httpRequestManager;
 
-    private static DomainManager defaultDomainManager;
+    private static DomainManager domainManager;
 
-    private static Environment defaultEnvironment;
+    private static Environment environment;
 
     private static HttpClients httpClient;
 
@@ -23,19 +23,14 @@ public final class ApiUtils {
      * @return the default http request
      */
     public static HttpRequest getDefaultHttpRequest(Class<?> apiType) {
-        return getDefaultHttpRequest();
+        return getHttpRequestManager().getHttpRequest(apiType);
     }
 
-    /**
-     * Gets the default http request.
-     *
-     * @return the default http request
-     */
-    public static HttpRequest getDefaultHttpRequest() {
-        if (defaultHttpRequest == null) {
-            throw new IllegalArgumentException("defaultHttpRequest未设置");
+    public static HttpRequestManager getHttpRequestManager() {
+        if (httpRequestManager == null) {
+            throw new IllegalArgumentException("defaultHttpRequestManager not set");
         }
-        return defaultHttpRequest;
+        return httpRequestManager;
     }
 
     /**
@@ -43,50 +38,50 @@ public final class ApiUtils {
      *
      * @return the default domain manager
      */
-    public static DomainManager getDefaultDomainManager() {
-        if (defaultDomainManager == null) {
-            throw new IllegalArgumentException("defaultDomainManager未设置");
+    public static DomainManager getDomainManager() {
+        if (domainManager == null) {
+            throw new IllegalArgumentException("defaultDomainManager not set");
         }
-        return defaultDomainManager;
+        return domainManager;
     }
 
     /**
-     * Sets the default http request.
+     * Sets the http request manager.
      *
-     * @param defaultHttpRequest the new default http request
+     * @param httpRequestManager the new http request manager
      */
-    public static void setDefaultHttpRequest(HttpRequest defaultHttpRequest) {
-        ApiUtils.defaultHttpRequest = defaultHttpRequest;
+    public static void setHttpRequestManager(HttpRequestManager httpRequestManager) {
+        ApiUtils.httpRequestManager = httpRequestManager;
     }
 
     /**
      * Sets the default domain manager.
      *
-     * @param defaultDomainManager the new default domain manager
+     * @param domainManager the new default domain manager
      */
-    public static void setDefaultDomainManager(DomainManager defaultDomainManager) {
-        ApiUtils.defaultDomainManager = defaultDomainManager;
+    public static void setDomainManager(DomainManager domainManager) {
+        ApiUtils.domainManager = domainManager;
     }
 
     /**
-     * Gets the default environment.
+     * Gets the environment.
      *
-     * @return the default environment
+     * @return the environment
      */
-    public static Environment getDefaultEnvironment() {
-        if (defaultEnvironment == null) {
-            throw new IllegalArgumentException("defaultEnvironment未设置");
+    public static Environment getEnvironment() {
+        if (environment == null) {
+            throw new IllegalArgumentException("environment not set");
         }
-        return defaultEnvironment;
+        return environment;
     }
 
     /**
-     * Sets the default environment.
+     * Sets the environment.
      *
-     * @param defaultEnvironment the new default environment
+     * @param environment the new environment
      */
-    public static void setDefaultEnvironment(Environment defaultEnvironment) {
-        ApiUtils.defaultEnvironment = defaultEnvironment;
+    public static void setEnvironment(Environment environment) {
+        ApiUtils.environment = environment;
     }
 
     /**
@@ -96,17 +91,17 @@ public final class ApiUtils {
      */
     public static HttpClients getDefaultHttpClient() {
         if (httpClient == null) {
-            throw new IllegalArgumentException("defaultHttpRequestConfig未设置");
+            throw new IllegalArgumentException("defaultHttpRequestConfig not set");
         }
         return httpClient;
     }
 
     /**
-     * Sets the default http request config.
+     * Sets the http request config.
      *
-     * @param httpClient the new default http request config
+     * @param httpClient the new http request config
      */
-    public static void setDefaultHttpClient(HttpClients httpClient) {
+    public static void setHttpClient(HttpClients httpClient) {
         ApiUtils.httpClient = httpClient;
     }
 }

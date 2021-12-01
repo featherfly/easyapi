@@ -25,7 +25,7 @@ public class RequestTest {
         HttpClients client = new HttpClients();
         DefaultHttpRequest request = new DefaultHttpRequest(new EnvironmentImpl(), client);
 
-        String url = "http://sfp.device.cdzkdc.com/api/v1/device/bd60ee0f054f4e7d";
+        String url = "http://localhost:8082/api/v1/device/bd60ee0f054f4e7d";
 
         Map<String, Serializable> params = new HashMap<>();
         params.put("snType", "SN");

@@ -2,4 +2,5 @@ dependencies {
     api project(":easyapi-core")
 //    api 'cn.featherfly.common:common-flux:0.1.0'
     api 'cn.featherfly.common:common-http:0.5.2'
+    api 'cn.featherfly.common:common-model:0.1.0'
 }

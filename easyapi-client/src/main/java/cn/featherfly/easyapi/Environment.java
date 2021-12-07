@@ -1,8 +1,8 @@
 package cn.featherfly.easyapi;
 
-import cn.featherfly.common.app.Platform;
-import cn.featherfly.common.app.Version;
 import cn.featherfly.common.location.LocationPoint;
+import cn.featherfly.common.model.app.Platform;
+import cn.featherfly.common.model.app.Version;
 import cn.featherfly.easyapi.pojo.User;
 
 /**

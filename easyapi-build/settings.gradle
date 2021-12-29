@@ -1,3 +1,4 @@
 rootProject.name = 'easyapi-build'
 includeFlat 'easyapi-core'
 includeFlat 'easyapi-client'
+includeFlat 'easyapi-code-generator'

@@ -1,0 +1,17 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+import io.swagger.annotations.*;
+import javax.validation.constraints.*;
+import com.fasterxml.jackson.annotation.*;
+{{#models}}
+{{#model}}
+{{#isEnum}}
+{{>enumOuterClass}}
+{{/isEnum}}
+{{^isEnum}}
+{{>modelPojo}}
+{{/isEnum}}
+{{/model}}
+{{/models}}

@@ -1,0 +1,8 @@
+{
+  "modelPackage":"com.cdmhzx.platform.web.admin.api.v1.{module}.dto",
+  "apiPackage":"com.cdmhzx.platform.web.admin.api.v1.{module}",
+  "groupId":"cn.featherfly.jbox",
+  "artifactId":"admin",
+  "artifactVersion":"1.2.0",
+  "title": "user-account-service"
+}

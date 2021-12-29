@@ -1,0 +1,21 @@
+openapi: 3.0.2
+info:
+  title: models
+  description: >
+    用户API
+  termsOfService: http://api.cdzkdc.com/terms/
+  contact:
+    email: zhongj@cdzkdc.com
+  version: 1.0.0
+servers:
+  - url: https://dev.app.cdzkdc.com/api/v1
+  - url: http://dev.app.cdzkdc.com/api/v1
+components:
+  schemas:
+    ResultDto3:
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string

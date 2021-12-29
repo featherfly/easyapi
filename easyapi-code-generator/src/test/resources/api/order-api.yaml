@@ -1,0 +1,228 @@
+openapi: 3.0.2
+info:
+  title: 瞄零食定义 - 订单接口定义
+  description: >
+    瞄零食定义 - 订单接口定义
+  termsOfService: http://jwzz.cdzkdc.com/terms/
+  contact:
+    email: featherfly@foxmail.com
+  version: 1.1.0
+servers:
+  - url: https://jwzz.cdzkdc.com/api/v1
+  - url: http://jwzz.cdzkdc.com/api/v1
+tags:
+  - name: trade-order
+    description: 交易订单
+paths:
+  "/orders":
+    post:
+      tags:
+        - trade-order
+      summary: 创建产品订单
+      description: >
+        @Login
+      operationId: create
+      requestBody:
+        description: 产品订单信息
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TradeOrderSubmitDto"
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeOrderPaymentDto"
+  "/orders/no-{orderNo}/payment":
+    get:
+      tags:
+        - trade-order
+      summary: 获取支付需要的参数
+      description: >
+        @Login
+      operationId: getPayment
+      parameters:
+        - name: orderNo
+          required: true
+          in: path
+          schema:
+            type: string
+          description: 订单号
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeOrderPaymentDto"
+  "/orders/my":
+    get:
+      tags:
+        - trade-order
+      summary: 获取个人订单
+      description: >
+        @Page
+        @Login
+      operationId: getMyOrders
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/OrderStatus"
+          description: 订单号
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "../admin/order-api.yaml#/components/schemas/PagingOrderDto"
+components:
+  schemas:
+    TradeOrderSubmitDto:
+      required:
+        - shelfId
+        - wxAppId
+        - paymentPlatform
+      properties:
+        shelfId:
+          type: integer
+          format: int64
+          description: 货架ID
+        wxAppId:
+          type: string
+          description: 微信公众号ID
+        paymentPlatform:
+          type: integer
+          format: int32
+          description: 支付方式
+        TradeOrderGoods:
+          type: array
+          items:
+            $ref: "#/components/schemas/TradeOrderGoodsSubmitDto"
+    TradeOrderGoodsSubmitDto:
+      required:
+        - goodsId
+        - goodsCount
+      properties:
+        goodsId:
+          type: integer
+          format: int64
+          description: 商品ID
+        goodsCount:
+          type: integer
+          format: int32
+          minimum: 1
+          description: 产品个数（实际生成订单时，一个产品一个订单）
+    TradeOrderPaymentDto:
+      properties:
+        nonceStr:
+          type: string
+          description: 微信支付参数：随机字符串
+        appId:
+          type: string
+          description: 微信支付参数：微信公众号APPID
+        packageInfo:
+          type: string
+          description: 微信支付参数：package
+        timeStamp:
+          type: string
+          description: 微信支付参数：时间戳
+        signType:
+          type: string
+          description: 微信支付参数：签名类型，目前为常量MD5
+        paySign:
+          type: string
+          description: 微信支付参数：支付签名
+        order:
+          $ref: "#/components/schemas/TradeOrderSummaryDto"
+    TradeOrderSummaryDto:
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 主键
+        orderNo:
+          type: string
+          description: 订单号
+        title:
+          type: string
+          description: 订单标题
+        userId:
+          type: integer
+          format: int64
+          description: 下单人ID
+        shelfId:
+          type: integer
+          format: int64
+          description: 货架ID
+        status:
+          type: integer
+          format: int32
+          description: 订单状态(0未消费,1支付中,2交易成功,3超时取消,4已取消,5异常,6已支付,8退款中,9退款成功,10订单已完成返利)
+        paymentPlatform:
+          type: integer
+          format: int32
+          description: 支付方式
+        amount:
+          type: number
+          description: 订单总额
+        payment:
+          type: number
+          description: 支付金额
+        createTime:
+          type: string
+          format: date-time
+          description: 订单创建时间
+        finishTime:
+          type: string
+          format: date-time
+          description: 订单完成时间
+        tradeOrderGoods:
+          $ref: "#/components/schemas/TradeOrderGoodsDto"
+    TradeOrderGoodsDto:
+      allOf:
+        - $ref: "#/components/schemas/TradeOrderGoodsSubmitDto"
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID
+        orderId:
+          type: integer
+          format: int64
+          description: orderId
+        goodsPrice:
+          type: number
+          description: 价格
+        goodsName:
+          type: string
+          description: 名称
+        amount:
+          type: integer
+          format: int64
+          description: 数量
+        payment:
+          type: number
+          description: 支付总价
+    OrderStatus:
+      type: string
+      enum:
+        - NOTSPEND
+        - PAYMENTING
+        - PAYED
+        - DELIVERING
+        - DELIVERED
+        - DELIVERING_EXCEPTION
+        - SUCCESS
+        - REFUNDING
+        - REFUND
+        - CANCEL
+        - TIMEOUT
+        - EXCEPTION
+        - REBATES
+        - CANCEL

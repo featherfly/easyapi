@@ -1,0 +1,83 @@
+openapi: 3.0.2
+info:
+  title: advertising
+  description: >
+    广告API
+  termsOfService: http://api.cdzkdc.com/terms/
+  contact:
+    email: zhongj@cdzkdc.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://api.cdzkdc.com/advertising/api/v1
+  - url: http://api.cdzkdc.com/advertising/api/v1
+tags:
+  - name: advertising
+    description: 广告相关的接口
+paths:
+  /advertising/{module}:
+    get:
+      tags:
+        - advertising
+      summary: get advertising by module
+      description: 根据模块获取广告信息
+      operationId: getAdvertisings
+      parameters:
+        - name: category
+          in: path
+          description: >
+            category of advertising
+          required: true
+          schema:
+            type: string
+            enum:
+              - MACHINE_MAP
+              - MYSELF_CENTER
+        - name: longitude
+          in: query
+          description: >
+            longitude
+          required: true
+          schema:
+            type: number
+        - name: latitude
+          in: query
+          description: >
+            latitude
+          required: true
+          schema:
+            type: number
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Advertisings"
+components:
+  schemas:
+    Advertisings:
+      properties:
+        module:
+          type: string
+        advertisings:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Advertising2"
+#            REF_NODE_NAME: "../models.yaml#/components/schemas/Advertising"
+    Advertising2:
+      allOf:
+        - $ref: "../models.yaml#/components/schemas/Advertising"
+        - type: object
+          description: 广告信息
+          properties:
+            ext:
+              type: string
+              description: 扩展
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

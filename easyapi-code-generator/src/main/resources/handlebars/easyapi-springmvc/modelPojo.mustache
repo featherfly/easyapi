@@ -1,0 +1,62 @@
+{{#description}}
+/**
+ * {{description}}
+ */{{/description}}
+@ApiModel(description = "{{{description}}}", value= "{{module}}.{{classname}}")
+public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {
+  {{#vars}}{{#isEnum}}
+  public enum {{datatypeWithEnum}} {
+    {{#allowableValues}}{{#values}} {{.}}, {{/values}}{{/allowableValues}}
+  };
+  private {{{datatypeWithEnum}}} {{name}} = {{{defaultValue}}};{{/isEnum}}{{^isEnum}}
+  {{#isDate}}@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8"){{/isDate}}
+  private {{{datatype}}} {{name}} = {{{defaultValue}}};{{/isEnum}}{{/vars}}
+
+  {{#vars}}
+  /**
+   * get {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}{{#minimum}}
+   * minimum: {{minimum}}{{/minimum}}{{#maximum}}
+   * maximum: {{maximum}}{{/maximum}}
+   * @return {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}
+   **/
+  @ApiModelProperty({{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
+  @JsonProperty("{{name}}"){{#required}}
+  @NotNull{{/required}}{{#hasLengthConstraint}}
+  @Length( {{#minLength}}min={{{minLength}}}{{/minLength}}{{#hasLengthBothConstraint}},{{/hasLengthBothConstraint}}{{#maxLength}}max={{{maxLength}}}{{/maxLength}}) {{/hasLengthConstraint}}{{#minimum}}
+  @DecimalMin("{{minimum}}") {{/minimum}}{{#maximum}}
+  @DecimalMax("{{maximum}}"){{/maximum}}
+  {{#pattern}}@Pattern(regexp = "{{pattern}}", message = "{{{description}}}格式不正确"){{/pattern}}
+  public {{{datatypeWithEnum}}} {{getter}}() {
+    return {{name}};
+  }
+
+  /**
+   * set {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}
+   * @param {{name}} {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}
+   */
+  public void {{setter}}({{{datatypeWithEnum}}} {{name}}) {
+    this.{{name}} = {{name}};
+  }
+
+  /**
+   * set {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}
+   * @param {{name}} {{#description}}{{description}}{{/description}}{{^description}}{{name}}{{/description}}
+   * @return {{classname}}
+   */
+  public {{classname}} {{name}}({{{datatypeWithEnum}}} {{name}}) {
+    {{setter}}({{name}});
+    return this;
+  }
+  {{ppt}}
+  {{/vars}}
+
+  @Override
+  public String toString()  {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class {{classname}} {\n");
+    {{#parent}}sb.append("  " + super.toString()).append("\n");{{/parent}}
+    {{#vars}}sb.append("  {{name}}: ").append({{name}}).append("\n");
+    {{/vars}}sb.append("}\n");
+    return sb.toString();
+  }
+}

@@ -1,0 +1,16 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import cn.featherfly.common.api.Response;
+{{#models}}
+
+{{#model}}{{#description}}
+/**
+ * {{description}}
+ **/{{/description}}
+public class {{classname}}Response extends Response<{{classname}}>{
+}
+{{/model}}
+{{/models}}

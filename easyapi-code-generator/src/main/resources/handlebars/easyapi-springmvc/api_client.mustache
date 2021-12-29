@@ -1,0 +1,26 @@
+package {{package}};
+
+import {{package}}.*;
+import {{modelPackage}}.*;
+import javax.annotation.Generated;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.List;
+
+{{#operations}}
+{{>generatedAnnotation}}
+public interface {{classname}} {
+
+    {{#operation}}
+    /**
+     * {{{summary}}}{{#allParams}}
+     * @param {{paramName}} {{#description}}{{description}}{{/description}}{{^description}}{{paramName}}{{/description}}{{/allParams}}
+     * @return {{#returnType}}{{returnType}}{{/returnType}}Response
+     */
+    public {{#returnType}}{{{returnType}}}Response{{/returnType}}{{^returnType}}cn.featherfly.common.api.Response{{/returnType}} {{nickname}}({{#allParams}}{{>serviceQueryParams}}{{>servicePathParams}}{{>serviceHeaderParams}}{{>serviceBodyParams}}{{>serviceFormParams}}{{>serviceLoginParams}}{{>serviceRequestParams}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+    
+    {{/operation}}
+}
+{{/operations}}

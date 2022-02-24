@@ -1,0 +1,26 @@
+{
+  "name": "easyapi-ts",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/featherfly/easyapi"
+  },
+  "scripts": {
+    "build": "gulp clean && tsc && gulp uglify"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.19",
+    "@types/uni-app": "^1.4.4",
+    "axios": "^0.24.0",
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {}
+}

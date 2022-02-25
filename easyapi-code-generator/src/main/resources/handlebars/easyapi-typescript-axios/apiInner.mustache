@@ -197,7 +197,7 @@ export function {{nickname}}({{#parameters}}{{paramName}}{{^required}}?{{/requir
     localVarRequestOptions.url = BASE_PATH + localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash;
     return new Promise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Response<any>{{/returnType}}>((resolve,reject) => {
         request(localVarRequestOptions).then((res) => {
-            resolve(res.data);
+            resolve(res);
         }).catch((res) => {
             reject(res);
         });

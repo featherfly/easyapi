@@ -2,8 +2,7 @@
 /* eslint-disable */
 {{>licenseInfo}}
 
-import http, {request} from '{{requestImportPath}}';
-import { Response, ValidationError } from '{{apiImportPath}}'
+import { request, Response, ValidationError } from '{{apiImportPath}}'
 // Some imports not used depending on template conditions
 // @ts-ignore
 
@@ -198,8 +197,8 @@ export function {{nickname}}({{#parameters}}{{paramName}}{{^required}}?{{/requir
     return new Promise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Response<any>{{/returnType}}>((resolve,reject) => {
         request(localVarRequestOptions).then((res) => {
             resolve(res);
-        }).catch((res) => {
-            reject(res);
+        }).catch((error) => {
+            reject(error);
         });
     });
 }

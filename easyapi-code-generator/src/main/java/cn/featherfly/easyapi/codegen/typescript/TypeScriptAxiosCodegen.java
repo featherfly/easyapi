@@ -47,9 +47,7 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
 
     protected String module;
 
-    protected String apiImportPath;
-
-    protected String requestImportPath;
+    protected String apiImportPath = "easyapi-ts";
 
     public TypeScriptAxiosCodegen() {
         super();
@@ -118,12 +116,13 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
         if (StringUtils.isBlank(apiImportPath)) {
             apiImportPath = apiRelativeToRoot + baseApiPackage + "/api";
         }
-        if (StringUtils.isBlank(requestImportPath)) {
-            requestImportPath = apiRelativeToRoot + baseApiPackage + "/request";
-        }
+
+        //        if (StringUtils.isBlank(requestImportPath)) {
+        //            requestImportPath = apiRelativeToRoot + baseApiPackage + "/request";
+        //        }
 
         additionalProperties.put("apiImportPath", apiImportPath);
-        additionalProperties.put("requestImportPath", requestImportPath);
+        //        additionalProperties.put("requestImportPath", requestImportPath);
 
         additionalProperties.put("tsModelPackage", tsModelPackage);
         additionalProperties.put("tsApiPackage", tsApiPackage);
@@ -339,23 +338,5 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
      */
     public void setApiImportPath(String apiImportPath) {
         this.apiImportPath = apiImportPath;
-    }
-
-    /**
-     * Getter for property 'requestImportPath'.
-     *
-     * @return Value for property 'requestImportPath'.
-     */
-    public String getRequestImportPath() {
-        return requestImportPath;
-    }
-
-    /**
-     * Setter for property 'requestImportPath'.
-     *
-     * @param requestImportPath Value to set for property 'requestImportPath'.
-     */
-    public void setRequestImportPath(String requestImportPath) {
-        this.requestImportPath = requestImportPath;
     }
 }

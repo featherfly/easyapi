@@ -32,11 +32,11 @@ const req = {};
 //     importAxios();
 // }
 let env;
-if (import.meta["env"]) {
-    env = import.meta["env"];
-}
-else if (process.env) {
+if (process.env) {
     env = process.env;
+}
+else if (import.meta && import.meta["env"]) {
+    env = import.meta["env"];
 }
 if (env && env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
     import('./uni/request').then((module) => {
@@ -48,14 +48,29 @@ else {
         Object.assign(req, module);
     });
 }
-const requestConfig = req.requestConfig;
-const request = req.request;
-const get = req.get;
-const post = req.post;
-const put = req.put;
-const del = req.del;
-const head = req.head;
-const options = req.options;
-export { requestConfig, request, get, post, put, del, head, options };
-export default req.default;
+export function requestConfig(set) {
+    req.requestConfig(set);
+}
+export function request(config) {
+    return req.request(config);
+}
+export function get(url, config) {
+    return req.get(url, config);
+}
+export function del(url, config) {
+    return req.del(url, config);
+}
+export function head(url, config) {
+    return req.head(url, config);
+}
+export function options(url, config) {
+    return req.options(url, config);
+}
+export function post(url, data, config) {
+    return req.post(url, data, config);
+}
+export function put(url, data, config) {
+    return req.put(url, data, config);
+}
+export default req;
 //# sourceMappingURL=index.js.map

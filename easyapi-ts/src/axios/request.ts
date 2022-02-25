@@ -14,15 +14,15 @@ const globalConfig : Config = {
     library : Library.AXIOS,
     timeout: 1000 * 60,
     messager: {
-        dialog: (message: string) : Promise<undefined> =>{
+        dialog: (message: string) : Promise<boolean> =>{
             alert(message);
-            return Promise.resolve(undefined);
+            return Promise.resolve(true);
         },
         error: (message: string) : Promise<undefined> =>{
             alert(message);
             return Promise.resolve(undefined);
         },
-        notice: (message: string) : Promise<undefined> =>{
+        info: (message: string) : Promise<undefined> =>{
             alert(message);
             return Promise.resolve(undefined);
         }
@@ -70,7 +70,7 @@ function createAxiosInstance() : AxiosInstance {
         }).then((response: AxiosResponse) => {
             const data: ResponseData<any> = response.data;
             if (data.code == 'OK') {
-                return resolve(data);
+                return resolve(data.data);
             } else {
                 return rejects(response);
             }
@@ -81,7 +81,6 @@ function createAxiosInstance() : AxiosInstance {
     });
 };
 
-
 // export function request(config: AxiosRequestConfig, cancelShowError?: boolean): AxiosPromise<any> {
 //     return axiosRequest(config).then((response: AxiosResponse) => response.data).catch((error) => errorHandler(error, cancelShowError));
 // }
@@ -89,8 +88,7 @@ function createAxiosInstance() : AxiosInstance {
 export function request(
     config: RequestConfig
 ): Promise<any> {
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 export function get(
@@ -103,8 +101,7 @@ export function get(
             method : 'GET'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 export function del(
@@ -117,8 +114,7 @@ export function del(
             method : 'DELETE'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 export function head(
@@ -132,8 +128,7 @@ export function head(
             method : 'HEAD'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => {console.log(response); return response.data});
+    return _request(config);
 }
 
 export function options(
@@ -147,8 +142,7 @@ export function options(
             method : 'OPTIONS'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 export function post(
@@ -163,8 +157,7 @@ export function post(
             method : 'POST'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 export function put(
@@ -179,8 +172,7 @@ export function put(
             method : 'PUT'
         }
     }
-    return _request(config)
-        .then((response: ResponseData<any>) => response.data);
+    return _request(config);
 }
 
 // export function patch(

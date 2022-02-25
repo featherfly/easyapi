@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 import http, {request} from '../../../';
-import { Response, ValidationError } from '../../../lib/api'
+import { Response, ValidationError } from '../../../'
 // Some imports not used depending on template conditions
 // @ts-ignore
 

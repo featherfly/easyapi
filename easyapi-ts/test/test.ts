@@ -1,4 +1,4 @@
-import http, {get,requestConfig, Library} from '../lib/request';
+import http, {get,requestConfig, Library} from '../lib/';
 
 requestConfig((config)=> {
     config.interceptors.push();

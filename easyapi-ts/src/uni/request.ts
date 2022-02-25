@@ -12,17 +12,54 @@ const globalConfig : Config = {
     library : Library.AXIOS,
     timeout: 1000 * 60,
     messager: {
-        dialog: (message: string) : Promise<undefined> =>{
-            alert(message);
-            return Promise.resolve(undefined);
+        dialog: (message: string) : Promise<boolean> =>{
+            return new Promise<boolean>(function(resolve, reject) {
+                uni.showModal({
+                    content: message,
+                    success: function (res) {
+                        if (res.confirm) {
+                            console.log('用户点击确定');
+                            resolve(true);
+                        } else if (res.cancel) {
+                            console.log('用户点击取消');
+                            resolve(false);
+                        }
+                    },
+                    fail: function() {
+                        reject();
+                    }
+                });
+            });
         },
         error: (message: string) : Promise<undefined> =>{
-            alert(message);
-            return Promise.resolve(undefined);
+            return new Promise<undefined>(function(resolve, reject) {
+                uni.showToast({
+                    title: message,
+                    icon: "none",
+                    duration: 3000,
+                    success: function () {
+                        resolve(undefined);
+                    },
+                    fail: function() {
+                        reject();
+                    }
+                });
+            });
         },
-        notice: (message: string) : Promise<undefined> =>{
-            alert(message);
-            return Promise.resolve(undefined);
+        info: (message: string) : Promise<undefined> =>{
+            return new Promise<undefined>(function(resolve, reject) {
+                uni.showToast({
+                    title: message,
+                    icon: "none",
+                    duration: 2000,
+                    success: function () {
+                        resolve(undefined);
+                    },
+                    fail: function() {
+                        reject();
+                    }
+                });
+            });
         }
     }
 }
@@ -169,5 +206,6 @@ export default {
     put,
     del,
     head,
-    options
+    options,
+    requestConfig
 };

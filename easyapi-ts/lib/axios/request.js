@@ -13,13 +13,13 @@ const globalConfig = {
     messager: {
         dialog: (message) => {
             alert(message);
-            return Promise.resolve(undefined);
+            return Promise.resolve(true);
         },
         error: (message) => {
             alert(message);
             return Promise.resolve(undefined);
         },
-        notice: (message) => {
+        info: (message) => {
             alert(message);
             return Promise.resolve(undefined);
         }
@@ -61,7 +61,7 @@ const _request = (options) => {
         }).then((response) => {
             const data = response.data;
             if (data.code == 'OK') {
-                return resolve(data);
+                return resolve(data.data);
             }
             else {
                 return rejects(response);
@@ -76,8 +76,7 @@ const _request = (options) => {
 //     return axiosRequest(config).then((response: AxiosResponse) => response.data).catch((error) => errorHandler(error, cancelShowError));
 // }
 export function request(config) {
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 export function get(url, config) {
     if (!config) {
@@ -86,8 +85,7 @@ export function get(url, config) {
             method: 'GET'
         };
     }
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 export function del(url, config) {
     if (!config) {
@@ -96,8 +94,7 @@ export function del(url, config) {
             method: 'DELETE'
         };
     }
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 export function head(url, config) {
     if (!config) {
@@ -106,8 +103,7 @@ export function head(url, config) {
             method: 'HEAD'
         };
     }
-    return _request(config)
-        .then((response) => { console.log(response); return response.data; });
+    return _request(config);
 }
 export function options(url, config) {
     if (!config) {
@@ -116,8 +112,7 @@ export function options(url, config) {
             method: 'OPTIONS'
         };
     }
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 export function post(url, data, config) {
     if (!config) {
@@ -127,8 +122,7 @@ export function post(url, data, config) {
             method: 'POST'
         };
     }
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 export function put(url, data, config) {
     if (!config) {
@@ -138,8 +132,7 @@ export function put(url, data, config) {
             method: 'PUT'
         };
     }
-    return _request(config)
-        .then((response) => response.data);
+    return _request(config);
 }
 // export function patch(
 //     url: string,

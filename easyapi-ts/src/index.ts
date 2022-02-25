@@ -118,9 +118,9 @@ export interface Interceptor {
 }
 
 export interface Messager {
-    notice: (message: string) => Promise<undefined>;
+    info: (message: string) => Promise<undefined>;
     error: (message: string) => Promise<undefined>;
-    dialog: (message: string) => Promise<undefined>;
+    dialog: (message: string) => Promise<boolean>;
 }
 
 export enum Library {
@@ -173,10 +173,10 @@ const req = <REQUEST>{ }
 
 let env;
 
-if (import.meta["env"]) {
-    env = import.meta["env"];
-} else if (process.env) {
+if (process.env) {
     env = process.env;
+} else if (import.meta && import.meta["env"]) {
+    env = import.meta["env"];
 }
 
 if (env && env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
@@ -189,15 +189,59 @@ if (env && env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
     })
 }
 
-const requestConfig = req.requestConfig;
-const request = req.request;
-const get = req.get;
-const post = req.post;
-const put = req.put;
-const del = req.del;
-const head = req.head;
-const options = req.options;
 
-export {requestConfig, request, get, post, put, del, head, options};
+export function requestConfig(set : (config: Config) => void) : void {
+    req.requestConfig(set);
+}
 
-export default req.default;
+export function request(
+    config: RequestConfig
+): Promise<any> {
+    return req.request(config);
+}
+
+export function get(
+    url: string,
+    config?: RequestConfig
+): Promise<any> {
+    return req.get(url, config);
+}
+
+export function del(
+    url: string,
+    config?: RequestConfig
+): Promise<any> {
+    return req.del(url, config);
+}
+
+export function head(
+    url: string,
+    config?: RequestConfig
+): Promise<any> {
+    return req.head(url, config);
+}
+
+export function options(
+    url: string,
+    config?: RequestConfig
+): Promise<any> {
+    return req.options(url, config);
+}
+
+export function post(
+    url: string,
+    data?: any,
+    config?: RequestConfig
+): Promise<any> {
+    return req.post(url, data, config);
+}
+
+export function put(
+    url: string,
+    data?: any,
+    config?: RequestConfig
+): Promise<any> {
+    return req.put(url, data, config);
+}
+
+export default req;

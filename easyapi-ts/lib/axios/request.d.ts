@@ -15,5 +15,6 @@ declare const _default: {
     del: typeof del;
     head: typeof head;
     options: typeof options;
+    requestConfig: typeof requestConfig;
 };
 export default _default;

@@ -198,6 +198,7 @@ export default {
     put,
     del,
     head,
-    options
+    options,
+    requestConfig
     // patch
 };

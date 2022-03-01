@@ -9,7 +9,7 @@ const globalConfig : Config = {
         return Promise.reject(error);
     },
     interceptors : new Array<Interceptor>(),
-    library : Library.AXIOS,
+    library : Library.UNI,
     timeout: 1000 * 60,
     messager: {
         dialog: (message: string) : Promise<boolean> =>{

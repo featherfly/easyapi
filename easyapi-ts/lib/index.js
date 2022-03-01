@@ -38,7 +38,7 @@ if (process.env) {
 else if (import.meta && import.meta["env"]) {
     env = import.meta["env"];
 }
-if (env && env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
+if (env && (env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') || (env.VUE_APP_EASYAPI && env.VUE_APP_EASYAPI == 'uni')) {
     import('./uni/request').then((module) => {
         Object.assign(req, module);
     });

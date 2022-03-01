@@ -4,7 +4,7 @@ const globalConfig = {
         return Promise.reject(error);
     },
     interceptors: new Array(),
-    library: Library.AXIOS,
+    library: Library.UNI,
     timeout: 1000 * 60,
     messager: {
         dialog: (message) => {

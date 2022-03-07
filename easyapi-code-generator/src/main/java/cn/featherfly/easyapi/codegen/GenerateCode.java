@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import org.slf4j.Logger;
@@ -219,8 +220,11 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
         EasyapiDefaultGenerator generator = new EasyapiDefaultGenerator();
         //        generator.setGenerateControllers(generateControllers);
         generator.setGenerateSwaggerMetadata(generateSwaggerMetadata);
-        generator.opts(input.opts(new ClientOpts()).config(codegen).openAPI(swaggerParseResult.getOpenAPI()))
-                .generate();
+        List<File> files = generator
+                .opts(input.opts(new ClientOpts()).config(codegen).openAPI(swaggerParseResult.getOpenAPI())).generate();
+        for (File file : files) {
+            System.out.println("generate file : " + file.getAbsolutePath());
+        }
     }
 
     private void setSystemProperties() {

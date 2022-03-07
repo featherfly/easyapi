@@ -42,6 +42,8 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
 
     private String module;
 
+    private String secondModule;
+
     private boolean verbose;
 
     //    private String output = "../mh-server/mh-web-api/src/v2gen/";
@@ -119,6 +121,7 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
         if (codegen instanceof ModuleAbility) {
             ModuleAbility moduleAbility = (ModuleAbility) codegen;
             moduleAbility.setModule(module);
+            moduleAbility.setSecondModule(secondModule);
         }
 
         if (mergeDoc) {
@@ -579,4 +582,15 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
     public void setModule(String module) {
         this.module = module;
     }
+
+    @Override
+    public String getSecondModule() {
+        return secondModule;
+    }
+
+    @Override
+    public void setSecondModule(String secondModule) {
+        this.secondModule = secondModule;
+    }
+
 }

@@ -47,6 +47,8 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
 
     protected String module;
 
+    protected String secondModule;
+
     protected String apiImportPath = "easyapi-ts";
 
     public TypeScriptAxiosCodegen() {
@@ -338,5 +340,25 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
      */
     public void setApiImportPath(String apiImportPath) {
         this.apiImportPath = apiImportPath;
+    }
+
+    /**
+     * get secondModule value
+     *
+     * @return secondModule
+     */
+    @Override
+    public String getSecondModule() {
+        return secondModule;
+    }
+
+    /**
+     * set secondModule value
+     *
+     * @param secondModule secondModule
+     */
+    @Override
+    public void setSecondModule(String secondModule) {
+        this.secondModule = secondModule;
     }
 }

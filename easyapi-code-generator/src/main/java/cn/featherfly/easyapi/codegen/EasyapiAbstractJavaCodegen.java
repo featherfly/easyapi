@@ -57,6 +57,8 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
     //
     protected String module;
 
+    protected String secondModule;
+
     protected String configPackage = "";
 
     protected String defaultApiPath = "/v1/api";
@@ -584,5 +586,25 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
             allowableValues.put("values", _enum);
             codegenProperty.allowableValues = allowableValues;
         }
+    }
+
+    /**
+     * get secondModule value
+     *
+     * @return secondModule
+     */
+    @Override
+    public String getSecondModule() {
+        return secondModule;
+    }
+
+    /**
+     * set secondModule value
+     *
+     * @param secondModule secondModule
+     */
+    @Override
+    public void setSecondModule(String secondModule) {
+        this.secondModule = secondModule;
     }
 }

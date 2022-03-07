@@ -1,15 +1,6 @@
 package cn.featherfly.easyapi.codegen;
 
-import cn.featherfly.common.io.FileUtils;
-import cn.featherfly.common.lang.ClassLoaderUtils;
-import io.swagger.codegen.v3.*;
-import io.swagger.codegen.v3.config.Config;
-import io.swagger.codegen.v3.config.ConfigParser;
-import io.swagger.codegen.v3.generators.DefaultCodegenConfig;
-import io.swagger.parser.OpenAPIParser;
-import io.swagger.v3.parser.core.models.SwaggerParseResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.util.ServiceLoader.load;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,12 +12,26 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.ServiceLoader;
 
-import static java.util.ServiceLoader.load;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.featherfly.common.io.FileUtils;
+import cn.featherfly.common.lang.ClassLoaderUtils;
+import io.swagger.codegen.v3.CliOption;
+import io.swagger.codegen.v3.ClientOptInput;
+import io.swagger.codegen.v3.ClientOpts;
+import io.swagger.codegen.v3.CodegenConfig;
+import io.swagger.codegen.v3.CodegenConstants;
+import io.swagger.codegen.v3.config.Config;
+import io.swagger.codegen.v3.config.ConfigParser;
+import io.swagger.codegen.v3.generators.DefaultCodegenConfig;
+import io.swagger.parser.OpenAPIParser;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 /**
  * The type Generate code 2.
  */
-public class GenerateCode implements EnableExtParameters,WrapResponseAbility, ModuleAbility {
+public class GenerateCode implements EnableExtParameters, WrapResponseAbility, ModuleAbility {
 
     /**
      * The constant LOG.
@@ -39,7 +44,7 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
 
     private boolean verbose;
 
-//    private String output = "../mh-server/mh-web-api/src/v2gen/";
+    //    private String output = "../mh-server/mh-web-api/src/v2gen/";
 
     private String output = "";
 
@@ -59,13 +64,13 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
 
     private boolean generateSupportingFiles;
 
-//    private String templateDir = "src/main/resources/spring-mvc/myServerCodegen";
+    //    private String templateDir = "src/main/resources/spring-mvc/myServerCodegen";
 
     private String templateDir = null;
 
     private String systemProperties;
 
-//    private String configFile = "";
+    //    private String configFile = "";
 
     private String configFile = "";
 
@@ -84,7 +89,8 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
     protected Collection<ExtParameter> extParameters = new HashSet<>();
 
     /**
-     * Tries to load config class with SPI first, then with class name directly from classpath
+     * Tries to load config class with SPI first, then with class name directly
+     * from classpath
      *
      * @param name name of config, or full qualified class name in classpath
      * @return config class
@@ -126,16 +132,14 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
             FileUtils.makeDirectory(newFile);
 
             try {
-                MergeDocs.mergeSchemas(fileName, new OutputStreamWriter(new FileOutputStream(
-                        new File(newFilePath)),
-                        StandardCharsets.UTF_8));
+                MergeDocs.mergeSchemas(fileName,
+                        new OutputStreamWriter(new FileOutputStream(new File(newFilePath)), StandardCharsets.UTF_8));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
             setSpec(newFileName);
         }
-
 
         verbosed(verbose);
 
@@ -150,7 +154,7 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
         }
 
         if (codegen instanceof EasyapiAbstractJavaCodegen) {
-            ((EasyapiAbstractJavaCodegen)codegen).setSourceFolder(sourceFolder);
+            ((EasyapiAbstractJavaCodegen) codegen).setSourceFolder(sourceFolder);
         }
 
         System.setProperty(CodegenConstants.GENERATE_APIS, generateApis + "");
@@ -167,7 +171,6 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
 
         System.setProperty(CodegenConstants.SUPPORTING_FILES, generateSupportingFiles + "");
 
-
         if (null != templateDir) {
             System.out.println("templateDir: " + templateDir);
             codegen.additionalProperties().put(CodegenConstants.TEMPLATE_DIR, templateDir);
@@ -179,6 +182,9 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
         if (null != configFile) {
             URL configFileUrl = ClassLoaderUtils.getResource(configFile, this.getClass());
             System.out.println("configFile: " + configFileUrl);
+            if (configFileUrl == null) {
+                throw new IllegalArgumentException("configFile is not found with " + configFile);
+            }
             Config genConfig = ConfigParser.read(configFileUrl.getPath());
             if (null != genConfig) {
                 for (CliOption langCliOption : codegen.cliOptions()) {
@@ -196,8 +202,8 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
                     }
                 }
                 if (genConfig.hasOption("title")) {
-                    if (codegen instanceof  EasyapiAbstractJavaCodegen) {
-                        ((EasyapiAbstractJavaCodegen)codegen).setTitle(genConfig.getOption("title"));
+                    if (codegen instanceof EasyapiAbstractJavaCodegen) {
+                        ((EasyapiAbstractJavaCodegen) codegen).setTitle(genConfig.getOption("title"));
                     }
                 }
             }
@@ -208,7 +214,7 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
         SwaggerParseResult swaggerParseResult = new OpenAPIParser().readLocation(specUrl.toString(),
                 input.getAuthorizationValues(), null);
         EasyapiDefaultGenerator generator = new EasyapiDefaultGenerator();
-//        generator.setGenerateControllers(generateControllers);
+        //        generator.setGenerateControllers(generateControllers);
         generator.setGenerateSwaggerMetadata(generateSwaggerMetadata);
         generator.opts(input.opts(new ClientOpts()).config(codegen).openAPI(swaggerParseResult.getOpenAPI()))
                 .generate();
@@ -226,7 +232,8 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
     }
 
     /**
-     * If true parameter, adds system properties which enables debug mode in generator
+     * If true parameter, adds system properties which enables debug mode in
+     * generator
      *
      * @param verbose - if true, enables debug mode
      */
@@ -455,7 +462,6 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
         this.generateApiDocs = generateApiDocs;
     }
 
-
     /**
      * Getter for property 'generateSwaggerMetadata'.
      *
@@ -468,7 +474,8 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
     /**
      * Setter for property 'generateSwaggerMetadata'.
      *
-     * @param generateSwaggerMetadata Value to set for property 'generateSwaggerMetadata'.
+     * @param generateSwaggerMetadata Value to set for property
+     *                                'generateSwaggerMetadata'.
      */
     public void setGenerateSwaggerMetadata(boolean generateSwaggerMetadata) {
         this.generateSwaggerMetadata = generateSwaggerMetadata;
@@ -512,19 +519,20 @@ public class GenerateCode implements EnableExtParameters,WrapResponseAbility, Mo
     /**
      * Setter for property 'generateSupportingFiles'.
      *
-     * @param generateSupportingFiles Value to set for property 'generateSupportingFiles'.
+     * @param generateSupportingFiles Value to set for property
+     *                                'generateSupportingFiles'.
      */
     public void setGenerateSupportingFiles(boolean generateSupportingFiles) {
         this.generateSupportingFiles = generateSupportingFiles;
     }
 
     //    public boolean isGenerateControllers() {
-//        return generateControllers;
-//    }
+    //        return generateControllers;
+    //    }
 
-//    public void setGenerateControllers(boolean generateControllers) {
-//        this.generateControllers = generateControllers;
-//    }
+    //    public void setGenerateControllers(boolean generateControllers) {
+    //        this.generateControllers = generateControllers;
+    //    }
 
     @Override
     public Collection<ExtParameter> getExtParameters() {

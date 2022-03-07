@@ -1,3 +1,6 @@
+# 0.1.15 
+1. 找不到configFile对应的文件抛出异常
+
 # 0.1.14 2022-02-24
 1. 修复ts模型文件属性去掉public
 2. 升级ts模型then的模式，因为请求easyapi-ts请求后已经在then内返回了res.data，所以res.data替换为res,并从easyapi-ts导入引用类型

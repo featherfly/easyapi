@@ -1,17 +1,35 @@
 {
   "name": "easyapi-ts",
-  "version": "0.1.7",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "typings": "lib/index.d.ts",
+  "version": "0.1.8",
+  "main": "index.js",
+  "types": "dist/request.d.ts",
+  "typings": "dist/request.d.ts",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/featherfly/easyapi"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "node": "./index.mjs",
+        "default": "./dist/request.js"
+      },
+      "require": "./index.js",
+      "types": "./dist/request.d.ts"
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "build": "gulp clean && tsc && gulp uglify",
-    "pub": "yarn build && npm publish"
+    "build": "yarn build:uni && yarn build:axios",
+    "build:uni": "gulp clean && gulp copyRelease && gulp compile && gulp copyUni && gulp uglify && gulp cleanCompile",
+    "build:axios": "gulp clean && gulp copyRelease && gulp compile && gulp buildAxios && gulp uglify && gulp cleanCompile",
+    "build:uni2": "gulp clean && gulp buildUni && gulp cleanCompile",
+    "build:axios2": "gulp clean && gulp buildAxios && gulp cleanCompile",
+    "pub": "npm run pub:uni && npm run pub:axios",
+    "pub:uni": "yarn build:uni && npm publish ./release",
+    "pub:axios": "yarn build:axios && npm publish ./release"
   },
   "devDependencies": {
     "@types/node": "^17.0.19",
@@ -19,6 +37,7 @@
     "axios": "^0.24.0",
     "del": "^6.0.0",
     "gulp": "^4.0.2",
+    "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
     "typescript": "^4.5.4"

@@ -29,7 +29,6 @@ export declare class ValidationError extends Error {
     constructor(field: string, msg?: string);
 }
 
-
 // export type Method =
 //     | 'get'
 //     | 'GET'
@@ -52,15 +51,9 @@ export declare class ValidationError extends Error {
 //     | 'unlink'
 //     | 'UNLINK';
 
-export type Method =
-    | 'OPTIONS'
-    | 'GET'
-    | 'HEAD'
-    | 'POST'
-    | 'PUT'
-    | 'DELETE';
-    // | 'TRACE'
-    // | 'CONNECT';
+export type Method = 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE';
+// | 'TRACE'
+// | 'CONNECT';
 
 export type ResponseType =
     | 'arraybuffer'
@@ -137,111 +130,18 @@ export interface Config {
     messager: Messager;
 }
 
-type REQUEST = typeof import('./uni/request') & typeof import('./axios/request')
+export function requestConfig(set: (config: Config) => void): void;
 
-const req = <REQUEST>{ }
+export function request(config: RequestConfig): Promise<any>;
 
-// function importUni() {
-//     import('./uni/request').then((module) => {
-//         Object.assign(req, module)
-//     })
-// }
+export function get(url: string, config?: RequestConfig): Promise<any>
 
-// function importAxios() {
-//     import('./axios/request').then((module) => {
-//         Object.assign(req, module)
-//     })
-// }
+export function del(url: string, config?: RequestConfig): Promise<any>
 
-// if (import.meta["env"]) {
-//     const env = import.meta["env"];
-//     if (env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
-//         importUni();
-//     } else {
-//         importAxios();
-//     }
-// } else if (process.env) {
-//     const env = process.env;
-//     if (env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') {
-//         importUni();
-//     } else {
-//         importAxios();
-//     }
-// } else {
-//     importAxios();
-// }
+export function head(url: string, config?: RequestConfig): Promise<any>
 
-let env;
+export function options(url: string, config?: RequestConfig): Promise<any>
 
-if (process.env) {
-    env = process.env;
-} else if (import.meta && import.meta["env"]) {
-    env = import.meta["env"];
-}
+export function post(url: string, data?: any, config?: RequestConfig): Promise<any>
 
-if (env && (env.EASYAPI_REQUEST_LIB && env.EASYAPI_REQUEST_LIB == 'uni') || (env.VUE_APP_EASYAPI && env.VUE_APP_EASYAPI == 'uni')) {
-    import('./uni/request').then((module) => {
-        Object.assign(req, module)
-    })
-} else {
-    import('./axios/request').then((module) => {
-        Object.assign(req, module)
-    })
-}
-
-
-export function requestConfig(set : (config: Config) => void) : void {
-    req.requestConfig(set);
-}
-
-export function request(
-    config: RequestConfig
-): Promise<any> {
-    return req.request(config);
-}
-
-export function get(
-    url: string,
-    config?: RequestConfig
-): Promise<any> {
-    return req.get(url, config);
-}
-
-export function del(
-    url: string,
-    config?: RequestConfig
-): Promise<any> {
-    return req.del(url, config);
-}
-
-export function head(
-    url: string,
-    config?: RequestConfig
-): Promise<any> {
-    return req.head(url, config);
-}
-
-export function options(
-    url: string,
-    config?: RequestConfig
-): Promise<any> {
-    return req.options(url, config);
-}
-
-export function post(
-    url: string,
-    data?: any,
-    config?: RequestConfig
-): Promise<any> {
-    return req.post(url, data, config);
-}
-
-export function put(
-    url: string,
-    data?: any,
-    config?: RequestConfig
-): Promise<any> {
-    return req.put(url, data, config);
-}
-
-export default req;
+export function put(url: string, data?: any, config?: RequestConfig): Promise<any>

@@ -4,6 +4,19 @@
 import {ApiResponse as ResponseData} from "./request.d"
 import {Messager, Config, Interceptor, Library, RequestConfig, Response} from "./request.d";
 
+/**
+ *
+ * @export
+ * @class ValidationError
+ * @extends {Error}
+ */
+ export class ValidationError extends Error {
+    constructor(public field: string, msg?: string) {
+        super(msg);
+        this.name = "ValidationError";
+    }
+}
+
 const globalConfig : Config = {
     errorHandler: (error: any, requestConfig?: RequestConfig) : Promise<any> => {
         return Promise.reject(error);

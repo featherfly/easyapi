@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
+import cn.featherfly.common.lang.Lang;
 import cn.featherfly.easyapi.codegen.EnableExtParameters;
 import cn.featherfly.easyapi.codegen.ExtParameter;
 import cn.featherfly.easyapi.codegen.ModuleAbility;
@@ -105,8 +106,12 @@ public class TypeScriptAxiosCodegen extends AbstractTypeScriptClientCodegen
 
         if (StringUtils.isNotBlank(module)) {
             // 加入模块支持
-            apiPackage = apiPackage + "/" + module;
-            modelPackage = modelPackage + "/" + module;
+            apiPackage += "/" + module;
+            modelPackage += "/" + module;
+            if (Lang.isNotEmpty(secondModule)) {
+                apiPackage += "/" + secondModule;
+                modelPackage += "/" + secondModule;
+            }
         }
 
         tsModelPackage = modelPackage.replaceAll("\\.", "/");

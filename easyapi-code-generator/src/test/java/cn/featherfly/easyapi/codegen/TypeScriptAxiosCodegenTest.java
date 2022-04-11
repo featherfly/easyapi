@@ -30,6 +30,7 @@ public class TypeScriptAxiosCodegenTest {
         code.setMergeDoc(true);
         code.setWrapResponse(true);
         code.setModule(module);
+        code.setSecondModule("secondmodule");
 
         code.run(codegen);
     }

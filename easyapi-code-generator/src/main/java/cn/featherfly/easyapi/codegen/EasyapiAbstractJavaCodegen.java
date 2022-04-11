@@ -94,11 +94,9 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
                 }
                 String notes = operation.notes;
                 if (notes != null) {
-                    ExtCodegenParameter requestParameter = new ExtCodegenParameter();
-                    requestParameter.setIsRequestParam(true);
                     extParameters.forEach(extParameter -> {
                         if (notes.contains(extParameter.getName())) {
-                            addAddtionalParameter(extParameter.getCodegenParameter(), operation,
+                            addAddtionalParameter(extParameter.getCodegenParameter().copy(), operation,
                                     extParameter.getParamTypeDefined(), extParameter.getParamName());
                             addExtParameterImports(objs, extParameter.getParamTypeImport());
                         }

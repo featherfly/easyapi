@@ -10,10 +10,12 @@ public class SpringCloundMvcCodegenTest {
     public static void g(String yaml, String module) {
         GenerateCode code = new GenerateCode();
         code.setConfigFile("api/admin-config.json");
-        code.addExtParameter(new ExtParameter("@LoginAdmin", new ExtCodegenParameter(true, false),
-                "cn.featherfly.jbox.web.admin.permission.AdminLoginInfo", "AdminLoginInfo", "loginInfo"));
         code.addExtParameter(new ExtParameter("@Login", new ExtCodegenParameter(true, false),
-                "cn.featherfly.jbox.user.domain.User", "User", "user"));
+                "cn.featherfly.jbox.web.admin.permission.AdminLoginInfo", "AdminLoginInfo", "loginInfo"));
+        //        code.addExtParameter(new ExtParameter("@LoginAdmin", new ExtCodegenParameter(true, false),
+        //                "cn.featherfly.jbox.web.admin.permission.AdminLoginInfo", "AdminLoginInfo", "loginInfo"));
+        //        code.addExtParameter(new ExtParameter("@Login", new ExtCodegenParameter(true, false),
+        //                "cn.featherfly.jbox.user.domain.User", "User", "user"));
         code.setOutput(Constants.SPRINGMVC_OUT_DIR);
         code.setSourceFolder("java");
         code.setGenerateApiDocs(false);
@@ -31,6 +33,7 @@ public class SpringCloundMvcCodegenTest {
         code.setSpec(yaml);
         //        code.run(new SpringCloundMvcCodegen(module));
         code.setModule(module);
+        code.setSecondModule("secondmodule");
         code.run(new SpringCloundMvcCodegen());
     }
 

@@ -64,8 +64,8 @@ paths:
         - trade-order
       summary: 获取个人订单
       description: >
-        @Page
         @Login
+        @Page
       operationId: getMyOrders
       parameters:
         - name: status

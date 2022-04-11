@@ -1,9 +1,9 @@
 package cn.featherfly.easyapi.codegen;
 
-import io.swagger.codegen.v3.CodegenParameter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import io.swagger.codegen.v3.CodegenParameter;
 
 /**
  * The type ExtCodegenParameter.
@@ -43,46 +43,94 @@ public class ExtCodegenParameter extends CodegenParameter {
     @Override
     public CodegenParameter copy() {
         ExtCodegenParameter output = new ExtCodegenParameter();
-        output.secondaryParam = this.secondaryParam;
-        output.baseName = this.baseName;
-        output.paramName = this.paramName;
-        output.dataType = this.dataType;
-        output.datatypeWithEnum = this.datatypeWithEnum;
-        output.enumName = this.enumName;
-        output.dataFormat = this.dataFormat;
-        output.collectionFormat = this.collectionFormat;
-        output.description = this.description;
-        output.unescapedDescription = this.unescapedDescription;
-        output.baseType = this.baseType;
-        output.nullable = this.nullable;
-        output.required = this.required;
-        output.maximum = this.maximum;
-        output.exclusiveMaximum = this.exclusiveMaximum;
-        output.minimum = this.minimum;
-        output.exclusiveMinimum = this.exclusiveMinimum;
-        output.maxLength = this.maxLength;
-        output.minLength = this.minLength;
-        output.pattern = this.pattern;
-        output.maxItems = this.maxItems;
-        output.minItems = this.minItems;
-        output.uniqueItems = this.uniqueItems;
-        output.multipleOf = this.multipleOf;
-        output.jsonSchema = this.jsonSchema;
-        output.defaultValue = this.defaultValue;
-        output.example = this.example;
-        output.testExample = this.testExample;
-        if (this._enum != null) {
-            output._enum = new ArrayList<String>(this._enum);
+        output.secondaryParam = secondaryParam;
+        output.baseName = baseName;
+        output.paramName = paramName;
+        output.dataType = dataType;
+        output.datatypeWithEnum = datatypeWithEnum;
+        output.enumName = enumName;
+        output.dataFormat = dataFormat;
+        output.collectionFormat = collectionFormat;
+        output.description = description;
+        output.unescapedDescription = unescapedDescription;
+        output.baseType = baseType;
+        output.nullable = nullable;
+        output.required = required;
+        output.maximum = maximum;
+        output.exclusiveMaximum = exclusiveMaximum;
+        output.minimum = minimum;
+        output.exclusiveMinimum = exclusiveMinimum;
+        output.maxLength = maxLength;
+        output.minLength = minLength;
+        output.pattern = pattern;
+        output.maxItems = maxItems;
+        output.minItems = minItems;
+        output.uniqueItems = uniqueItems;
+        output.multipleOf = multipleOf;
+        output.jsonSchema = jsonSchema;
+        output.defaultValue = defaultValue;
+        output.example = example;
+        output.testExample = testExample;
+        if (_enum != null) {
+            output._enum = new ArrayList<>(_enum);
         }
-        if (this.allowableValues != null) {
-            output.allowableValues = new HashMap<String, Object>(this.allowableValues);
+        if (allowableValues != null) {
+            output.allowableValues = new HashMap<>(allowableValues);
         }
-        if (this.items != null) {
-            output.items = this.items;
+        if (items != null) {
+            output.items = items;
         }
-        if (this.vendorExtensions != null) {
-            output.vendorExtensions = new HashMap<String, Object>(this.vendorExtensions);
+        if (vendorExtensions != null) {
+            output.vendorExtensions = new HashMap<>(vendorExtensions);
         }
+
+        // 扩展的属性
+        output.isLoginParam = isLoginParam;
+        output.isRequestParam = isRequestParam;
         return output;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (isLoginParam == null ? 0 : isLoginParam.hashCode());
+        result = prime * result + (isRequestParam == null ? 0 : isRequestParam.hashCode());
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ExtCodegenParameter other = (ExtCodegenParameter) obj;
+        if (isLoginParam == null) {
+            if (other.isLoginParam != null) {
+                return false;
+            }
+        } else if (!isLoginParam.equals(other.isLoginParam)) {
+            return false;
+        }
+        if (isRequestParam == null) {
+            if (other.isRequestParam != null) {
+                return false;
+            }
+        } else if (!isRequestParam.equals(other.isRequestParam)) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,3 +1,7 @@
+# 0.2.0 2022-04-11
+1. TypeScriptAxiosCodegen加入secondModule支持
+2. 修正springmvc @Page @Login加入多个后少逗号的问题
+
 # 0.1.15 2022-03-07
 1. 找不到configFile对应的文件抛出异常
 2. 加入secondModule属性

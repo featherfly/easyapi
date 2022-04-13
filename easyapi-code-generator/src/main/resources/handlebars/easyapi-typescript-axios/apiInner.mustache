@@ -105,14 +105,12 @@ export function {{nickname}}({{#parameters}}{{paramName}}{{^required}}?{{/requir
     if ({{paramName}} !== undefined) {
         {{#isDateTime}}
         localVarQueryParameter['{{baseName}}'] = ({{paramName}} as any instanceof Date) ?
-            ({{paramName}} as any).toISOString() :
-            {{paramName}};
+            ({{paramName}} as any).toLocaleString() : {{paramName}};
         {{/isDateTime}}
         {{^isDateTime}}
         {{#isDate}}
         localVarQueryParameter['{{baseName}}'] = ({{paramName}} as any instanceof Date) ?
-            ({{paramName}} as any).toISOString().substr(0,10) :
-            {{paramName}};
+            ({{paramName}} as any).toLocaleDateString() : {{paramName}};
         {{/isDate}}
         {{^isDate}}
         localVarQueryParameter['{{baseName}}'] = {{paramName}};

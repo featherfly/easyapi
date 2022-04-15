@@ -67,12 +67,15 @@ function createAxiosInstance() : AxiosInstance {
         if (options.baseURL == null) {
             options.baseURL = globalConfig.baseURL;
         }
+        globalConfig.interceptors.forEach((interceptor) => {
+            interceptor.request(options);
+        });
         let method = options.method + "";
         return axiosRequest({
             url: options.url,
             method: options.method || 'GET',
             baseURL: options.baseURL,
-            headers: options.headers, // TODO 后续加入globalConfig.headers进行全局请求头设置
+            headers: options.headers,
             params: options.params,
             paramsSerializer: options.paramsSerializer,
             data: options.data,
@@ -82,12 +85,30 @@ function createAxiosInstance() : AxiosInstance {
             responseType: options.responseType || 'json',
         }).then((response: AxiosResponse) => {
             const data: ResponseData<any> = response.data;
+            globalConfig.interceptors.forEach((interceptor) => {
+                interceptor.response({
+                    data,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
+                    requestConfig: options,
+                });
+            });
             if (data.code == 'OK') {
                 return resolve(data.data);
             } else {
                 return rejects(response);
             }
         }).catch((error) => {
+            globalConfig.interceptors.forEach((interceptor) => {
+                interceptor.response({
+                    data: error.data,
+                    status: error.status,
+                    statusText: error.statusText,
+                    headers: error.headers,
+                    requestConfig: options,
+                });
+            });
             globalConfig.errorHandler(error, options);
             rejects(error)
         });

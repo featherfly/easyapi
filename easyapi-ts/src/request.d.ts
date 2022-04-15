@@ -101,13 +101,13 @@ export interface Response<T = any> {
     status: number;
     statusText: string;
     headers: any;
-    config: RequestConfig;
+    requestConfig: RequestConfig;
     request?: any;
 }
 
 export interface Interceptor {
-    request?: (request: RequestConfig) => RequestConfig | Response;
-    response?: (response: Response) => Response;
+    request(request: RequestConfig) : RequestConfig;
+    response(response: Response) : Response;
 }
 
 export interface Messager {

@@ -87,15 +87,22 @@ const _request = (options: RequestConfig) : Promise<any> => {
         if (options.baseURL == null) {
             options.baseURL = globalConfig.baseURL;
         }
+        globalConfig.interceptors.forEach((interceptor) => {
+            interceptor.request(options);
+        });
         uni.request({
             url: options.baseURL ? options.baseURL + options.url : options.url,
-            header: options.headers, // TODO 后续加入globalConfig.headers进行全局请求头设置
+            header: options.headers,
                 // ...(uni.getStorageSync('token') ? {Authorization: uni.getStorageSync('token')} : {})
             method: options.method || 'GET',
             data: options.data,
             dataType: options.responseType || 'json',
             success: (res: any) => {
                 const data: ResponseData<any> = res.data;
+                globalConfig.interceptors.forEach((interceptor) => {
+                    res.requestConfig = options
+                    interceptor.response(res)
+                });
                 if (data.code == 'OK') {
                     resolve(data);
                 } else {
@@ -103,6 +110,10 @@ const _request = (options: RequestConfig) : Promise<any> => {
                 }
             },
             fail: (e: any) => {
+                globalConfig.interceptors.forEach((interceptor) => {
+                    e.requestConfig = options
+                    interceptor.response(e)
+                });
                 rejects(e);
             },
         });

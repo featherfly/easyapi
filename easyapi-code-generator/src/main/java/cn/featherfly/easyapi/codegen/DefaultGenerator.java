@@ -511,6 +511,16 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
 
     }
 
+    private String getTagDescp(String tagName) {
+        List<Tag> tags = openAPI.getTags();
+        for (Tag tag : tags) {
+            if (config.sanitizeTag(tag.getName()).equals(tagName)) {
+                return tag.getDescription();
+            }
+        }
+        return tagName;
+    }
+
     private void generateApis(List<File> files, List<Object> allOperations, List<Object> allModels) {
         if (!generateApis) {
             return;
@@ -547,6 +557,8 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
                 operation.put("basePathWithoutHost", basePathWithoutHost);
                 operation.put("contextPath", contextPath);
                 operation.put("baseName", tag);
+                operation.put("tag", getTagDescp(tag));
+
                 operation.put("modelPackage", config.modelPackage());
                 operation.putAll(config.additionalProperties());
                 operation.put("classname", config.toApiName(tag));

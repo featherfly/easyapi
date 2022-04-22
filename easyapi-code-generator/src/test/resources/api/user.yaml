@@ -16,6 +16,8 @@ servers:
 tags:
   - name: user
     description: 用户相关的接口
+  - name: user2
+    description: 用户相关的接口2
 paths:
   /user/my:
     get:
@@ -43,7 +45,7 @@ paths:
                 $ref: "#/components/schemas/User"
     put:
       tags:
-        - user
+        - user2
       summary: 更新用户基础资料
       description: 更新用户基础资料
       operationId: updateUserBasicData

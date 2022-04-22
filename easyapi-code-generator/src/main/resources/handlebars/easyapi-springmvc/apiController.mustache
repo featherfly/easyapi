@@ -24,7 +24,7 @@ import static org.springframework.http.MediaType.*;
 
 @RestController
 @RequestMapping(value = "{{basePathWithoutHost}}", produces = {APPLICATION_JSON_VALUE})
-@Api(value = "/{{baseName}}", description = "the {{baseName}} API")
+@Api(value = "/{{baseName}}", description = "the {{baseName}} API", tags="{{tag}}")
 {{#operations}}
 public class {{classname}}Controller {
     @Resource

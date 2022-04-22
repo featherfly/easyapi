@@ -1,3 +1,6 @@
+# 0.2.1 2022-04-22
+1. 修正生成POJO的@ApiModel value值不对导致UI界面没有参数显示的问题
+
 # 0.2.0 2022-04-11
 1. TypeScriptAxiosCodegen加入secondModule支持
 2. 修正springmvc @Page @Login加入多个后少逗号的问题

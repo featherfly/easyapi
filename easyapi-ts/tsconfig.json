@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es5",
+    "module": "commonjs",
     "moduleResolution": "node",
     "allowJs": true,
     "strict": true,
@@ -17,7 +17,7 @@
       "src/*": ["src/*"],
       "@/*": ["src/*"]
     },
-    "lib": ["esnext", "dom"],
+    "lib": ["es6", "dom"],
     "types": ["node", "uni-app"],
     "declaration": true,
     "outDir": "lib",

@@ -1,8 +1,8 @@
 Arguments: 
-  Y:\soft\programe\runtime\nodejs\node12.22.8\node.exe Y:\soft\programe\runtime\nodejs\node12.22.8\node_modules\yarn\bin\yarn.js add gulp-rename --dev
+  Y:\soft\programe\runtime\nodejs\node12.22.8\node.exe Y:\soft\programe\runtime\nodejs\node12.22.8\node_modules\yarn\bin\yarn.js install
 
 PATH: 
-  Z:\Windows\system32;Z:\Windows;Z:\Windows\System32\Wbem;Z:\Windows\System32\WindowsPowerShell\v1.0\;Z:\Windows\System32\OpenSSH\;Y:\soft\vcs\TortoiseGit\bin;Z:\Users\zhongj\.platformio\penv\Scripts;Z:\Users\zhongj\AppData\Local\Microsoft\WindowsApps;Y:\soft\programe\runtime\python\python38;Y:\soft\programe\runtime\python\python38\Scripts;Z:\Users\zhongj\.cargo\bin;Y:\soft\programe\runtime\java\jdk-openj9-8u312-b07\bin;Y:\soft\programe\runtime\graalvm\graalvm-ce-java17-21.3.0\bin;Y:\soft\programe\runtime\gradle\gradle-7.4.1\bin;Y:\soft\programe\runtime\maven\maven-3.8.4\bin;Y:\soft\programe\runtime\ant\bin;Y:\soft\programe\runtime\apache-jmeter-2.13\bin;D:\programe\Android\android-sdk\tools;D:\programe\Android\android-sdk\platform-tools;Y:\soft\programe\runtime\openocd\OpenOCD-20210729-0.11.0\bin;Y:\soft\programe\runtime\msys64\mingw64\bin;Y:\soft\programe\runtime\msys64\clang64\bin;Y:\soft\programe\runtime\mingw64\bin;Y:\soft\programe\runtime\mingw_arm\gcc-arm-10.3-2021.07-mingw-w64-i686-arm-none-eabi\bin;Y:\soft\programe\runtime\mingw_arm\gcc-linaro-7.5.0-2019.12-i686-mingw32_arm-linux-gnueabi\bin;Y:\soft\programe\runtime\mingw_arm\gcc-arm-9.2-2019.12-mingw-w64-i686-arm-none-linux-gnueabihf\bin;Y:\soft\programe\runtime\SDCC\bin;Y:\soft\programe\runtime\atmelavr\bin;Y:\soft\programe\runtime\avrdude;Y:\soft\programe\runtime\xmake;Y:\soft\programe\runtime\cmake\cmake-3.21.2-windows-x86_64\bin;Y:\soft\programe\runtime\msys64;Y:\soft\programe\runtime\msys64\usr\bin;Y:\soft\programe\runtime\cygwin;Y:\soft\programe\runtime\redis-2.8\bin;Y:\soft\programe\database\mysql-8.0.18\bin;Y:\soft\programe\runtime\Git\bin;Y:\soft\programe\runtime\nodejs\node12.22.8;Y:\soft\programe\runtime\php\php-8.0.11-nts-Win32-vs16-x64;Y:\soft\terminal\ConEmu;Y:\soft\terminal\cmder;Y:\soft\programe\runtime\PowerShell\PowerShell-7.1.5-win-x64;Y:\soft\programe\ide\arduinoide\arduino-1.8.12;Y:\soft\programe\runtime\ffmpeg\ffmpeg-2021-10-30-full\bin;Y:\soft\programe\runtime\qemu;Y:\soft\programe\ide\VSCode-x64\bin;D:\soft\browers\SogouExplorer;E:\soft\net_monitor\Fiddler4;Y:\soft\programe\tools\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;Y:\soft\programe\tools\stlink\stlink-1.7.0\bin;Y:\soft\programe\tools\gd\GD32 ISP CLI 1.0.0.5109;Y:\soft\programe\runtime\GnuPG\bin;E:\soft_all\soft_e\communication\putty\lastest;Y:\soft\programe\runtime\llvm\llvm-13.0.0\bin;Z:\Users\zhongj\AppData\Roaming\npm;E:\soft\cloc-1.64\
+  Z:\Windows\system32;Z:\Windows;Z:\Windows\System32\Wbem;Z:\Windows\System32\WindowsPowerShell\v1.0\;Z:\Windows\System32\OpenSSH\;Y:\soft\vcs\TortoiseGit\bin;Z:\Program Files\dotnet\;Y:\soft\programe\ide\VSCode-x64\bin;Z:\Users\zhongj\AppData\Local\Microsoft\WindowsApps;Z:\Users\zhongj\.cargo\bin;Y:\soft\programe\runtime\java\jdk-openj9-8u312-b07\bin;Y:\soft\programe\runtime\graalvm\graalvm-ce-java17-21.3.0\bin;Y:\soft\programe\runtime\gradle\gradle-7.4.1\bin;Y:\soft\programe\runtime\maven\maven-3.8.4\bin;Y:\soft\programe\runtime\ant\bin;Y:\soft\programe\runtime\apache-jmeter-2.13\bin;D:\programe\Android\android-sdk\tools;D:\programe\Android\android-sdk\platform-tools;Y:\soft\programe\runtime\openocd\OpenOCD-20210729-0.11.0\bin;Y:\soft\programe\runtime\msys64\mingw64\bin;Y:\soft\programe\runtime\msys64\clang64\bin;Y:\soft\programe\runtime\mingw64\bin;Y:\soft\programe\runtime\mingw_arm\gcc-arm-11.2-2022.02-mingw-w64-i686-arm-none-eabi\bin;Y:\soft\programe\runtime\mingw_arm\gcc-arm-11.2-2022.02-mingw-w64-i686-arm-none-linux-gnueabihf\bin;Y:\soft\programe\runtime\mingw_riscv\xpack-riscv-none-embed-gcc-10.2.0-1.2\bin;Y:\soft\programe\runtime\SDCC\bin;Y:\soft\programe\runtime\atmelavr\bin;Y:\soft\programe\runtime\avrdude;Y:\soft\programe\runtime\xmake;Y:\soft\programe\runtime\cmake\cmake-3.21.2-windows-x86_64\bin;Y:\soft\programe\runtime\msys64;Y:\soft\programe\runtime\msys64\usr\bin;Y:\soft\programe\runtime\cygwin;Y:\soft\programe\runtime\python\python38;Y:\soft\programe\runtime\python\python38\Scripts;Z:\Users\zhongj\.platformio\penv\Scripts;Y:\soft\programe\runtime\redis-2.8\bin;Y:\soft\programe\database\mysql-8.0.18\bin;Y:\soft\programe\runtime\Git\bin;Y:\soft\programe\runtime\nodejs\node12.22.8;Y:\soft\programe\runtime\php\php-8.0.11-nts-Win32-vs16-x64;Y:\soft\terminal\ConEmu;Y:\soft\terminal\cmder;Y:\soft\programe\runtime\PowerShell\PowerShell-7.1.5-win-x64;Y:\soft\programe\ide\arduinoide\arduino-1.8.12;Y:\soft\programe\runtime\ffmpeg\ffmpeg-2021-10-30-full\bin;Y:\soft\programe\runtime\qemu;D:\soft\browers\SogouExplorer;E:\soft\net_monitor\Fiddler4;Y:\soft\programe\tools\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;Y:\soft\programe\tools\stlink\stlink-1.7.0\bin;Y:\soft\programe\tools\gd\GD32 ISP CLI 1.0.0.5109;Y:\soft\programe\runtime\GnuPG\bin;Y:\soft\ssh\putty\lastest;Y:\soft\programe\runtime\llvm\llvm-13.0.0\bin;Z:\Users\zhongj\AppData\Roaming\npm;E:\soft\cloc-1.64\;Y:\soft\programe\ide\VSCode\bin;Y:\soft\programe\runtime\srecord
 
 Yarn version: 
   1.22.10
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: http://192.168.203.241:8081/repository/npm-release/gulp-rename: Package 'gulp-rename' not found
+  Error: http://192.168.203.241:8081/repository/npm-release/@babel%2fcli: Package '@babel/cli' not found
       at Request.params.callback [as _callback] (Y:\soft\programe\runtime\nodejs\node12.22.8\node_modules\yarn\lib\cli.js:66988:18)
       at Request.self.callback (Y:\soft\programe\runtime\nodejs\node12.22.8\node_modules\yarn\lib\cli.js:140662:22)
       at Request.emit (events.js:314:20)
@@ -29,7 +29,7 @@ Trace:
 npm manifest: 
   {
     "name": "easyapi-ts",
-    "version": "0.1.8",
+    "version": "0.2.1",
     "main": "index.js",
     "types": "dist/request.d.ts",
     "typings": "dist/request.d.ts",
@@ -51,19 +51,28 @@ npm manifest:
       "./package.json": "./package.json"
     },
     "scripts": {
+      "build": "yarn build:uni && yarn build:axios",
       "build:uni": "gulp clean && gulp copyRelease && gulp compile && gulp copyUni && gulp uglify && gulp cleanCompile",
       "build:axios": "gulp clean && gulp copyRelease && gulp compile && gulp buildAxios && gulp uglify && gulp cleanCompile",
       "build:uni2": "gulp clean && gulp buildUni && gulp cleanCompile",
       "build:axios2": "gulp clean && gulp buildAxios && gulp cleanCompile",
+      "pub": "npm run pub:uni && npm run pub:axios",
       "pub:uni": "yarn build:uni && npm publish ./release",
       "pub:axios": "yarn build:axios && npm publish ./release"
     },
     "devDependencies": {
       "@types/node": "^17.0.19",
       "@types/uni-app": "^1.4.4",
+      "@babel/cli": "^7.13.16",
+      "@babel/core": "^7.13.16",
+      "@babel/plugin-proposal-class-properties": "^7.13.0",
+      "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+      "@babel/preset-env": "^7.13.15",
+      "@babel/preset-typescript": "^7.13.0",
       "axios": "^0.24.0",
       "del": "^6.0.0",
       "gulp": "^4.0.2",
+      "gulp-rename": "^2.0.0",
       "gulp-typescript": "^6.0.0-alpha.1",
       "gulp-uglify": "^3.0.2",
       "typescript": "^4.5.4"
@@ -1054,6 +1063,11 @@ Lockfile:
       semver-greatest-satisfied-range "^1.1.0"
       v8flags "^3.2.0"
       yargs "^7.1.0"
+  
+  gulp-rename@^2.0.0:
+    version "2.0.0"
+    resolved "https://registry.yarnpkg.com/gulp-rename/-/gulp-rename-2.0.0.tgz#9bbc3962b0c0f52fc67cd5eaff6c223ec5b9cf6c"
+    integrity sha512-97Vba4KBzbYmR5VBs9mWmK+HwIf5mj+/zioxfZhOKeXtx5ZjBk57KFlePf5nxq9QsTtFl0ejnHE3zTC9MHXqyQ==
   
   gulp-typescript@^6.0.0-alpha.1:
     version "6.0.0-alpha.1"

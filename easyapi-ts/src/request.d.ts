@@ -18,6 +18,7 @@ export interface ApiResponse<D> {
      */
     data: any;
 }
+
 /**
  *
  * @export
@@ -116,10 +117,12 @@ export interface Messager {
     dialog: (message: string) => Promise<boolean>;
 }
 
-export enum Library {
-    AXIOS,
-    UNI,
-}
+export type Library = "AXIOS" | "UNI";
+
+// export enum Library {
+//     AXIOS,
+//     UNI,
+// }
 
 export interface Config {
     baseURL?: string;

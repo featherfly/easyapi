@@ -5,6 +5,9 @@ var rename=require('gulp-rename');
 
 const uglify = require('gulp-uglify');
 const ts = require('gulp-typescript');
+
+const babel = require('gulp-babel');
+
 const { copyFile } = require('fs');
 const tsProject = ts.createProject('tsconfig.json');
 
@@ -55,14 +58,23 @@ const cleanCompile = (done) => {
 };
 
 const compile = (done) => {
-    tsProject.src().pipe(tsProject()).js.pipe(gulp.dest('build'));
+    // tsProject.src().pipe(tsProject()).js.pipe(gulp.dest('build'));
+    tsProject.src().pipe(tsProject()).js.pipe(babel({
+        presets: ['@babel/preset-env']
+    }))
+    .pipe(gulp.dest('build'))
+
+    done();
+};
+const compile2 = (done) => {
+    tsProject.src().pipe(tsProject()).js.pipe(gulp.dest('build2'));
 
     done();
 };
 
 
 const copyUni = (done) => {
-    gulp.src(['./build/api.js']).pipe(gulp.dest(libDir));
+    // gulp.src(['./build/api.js']).pipe(gulp.dest(libDir));
     gulp.src(['./build/uni-request.js']).pipe(rename({basename:"request"})).pipe(gulp.dest(libDir));
 
     rewriteVersion("u");
@@ -71,7 +83,7 @@ const copyUni = (done) => {
 };
 
 const copyAxios = (done) => {
-    gulp.src(['./build/api.js']).pipe(gulp.dest(libDir));
+    // gulp.src(['./build/api.js']).pipe(gulp.dest(libDir));
     gulp.src(['./build/axios-request.js']).pipe(rename({basename:"request"})).pipe(gulp.dest(libDir));
 
     rewriteVersion("");
@@ -85,9 +97,9 @@ const copyReleaseFile = (done) => {
     done();
 };
 
-
 exports.clean = clean;
 exports.compile = compile;
+exports.compile2 = compile2;
 exports.uglify = uglifyTask;
 exports.copyUni = copyUni;
 exports.copyAxios = copyAxios;

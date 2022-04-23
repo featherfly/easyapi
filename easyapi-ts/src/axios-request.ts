@@ -4,7 +4,7 @@
 import axios, {AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
 
 import {ApiResponse as ResponseData} from "./request.d"
-import {Messager, Config, Interceptor, Library, RequestConfig, Response} from "./request.d";
+import {Config, Interceptor, RequestConfig} from "./request.d";
 
 /**
  *
@@ -24,7 +24,7 @@ const globalConfig : Config = {
         return Promise.reject(error);
     },
     interceptors : new Array<Interceptor>(),
-    library : Library.AXIOS,
+    library : "AXIOS",
     timeout: 1000 * 60,
     messager: {
         dialog: (message: string) : Promise<boolean> =>{

@@ -100,12 +100,13 @@ function createAxiosInstance() : AxiosInstance {
                 return rejects(response);
             }
         }).catch((error) => {
+            const {response} = error;
             globalConfig.interceptors.forEach((interceptor) => {
                 interceptor.response({
-                    data: error.data,
-                    status: error.status,
-                    statusText: error.statusText,
-                    headers: error.headers,
+                    data: response.data,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
                     requestConfig: options,
                 });
             });

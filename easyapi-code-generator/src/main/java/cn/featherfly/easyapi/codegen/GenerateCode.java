@@ -13,11 +13,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.featherfly.common.io.FileUtils;
 import cn.featherfly.common.lang.ClassLoaderUtils;
+import cn.featherfly.common.lang.Lang;
+import cn.featherfly.common.lang.UriUtils;
 import io.swagger.codegen.v3.CliOption;
 import io.swagger.codegen.v3.ClientOptInput;
 import io.swagger.codegen.v3.ClientOpts;
@@ -52,6 +56,8 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
     private String output = "";
 
     private String spec = "";
+
+    private String specFolder;
 
     private boolean generateTests;
 
@@ -124,6 +130,8 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
             moduleAbility.setModule(module);
             moduleAbility.setSecondModule(secondModule);
         }
+
+        String specFileName = StringUtils.substringAfterLast(new File(spec).getAbsolutePath(), File.separator);
 
         if (mergeDoc) {
             String fileName = getSpec();
@@ -215,6 +223,23 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
 
         URL specUrl = ClassLoaderUtils.getResource(spec, this.getClass());
         System.out.println("spec: " + specUrl);
+
+        // 如果设置了specFolder，则代表需要复制spec
+        if (Lang.isNotEmpty(specFolder)) {
+            try {
+                File f = new File(UriUtils.linkUri(output, specFolder, specFileName));
+                if (f.exists()) {
+                    FileUtils.delete(f);
+                } else {
+                    FileUtils.makeDirectory(f);
+                }
+                System.out.println("specOutput: " + f.getAbsolutePath());
+                IOUtils.copy(specUrl, f);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         SwaggerParseResult swaggerParseResult = new OpenAPIParser().readLocation(specUrl.toString(),
                 input.getAuthorizationValues(), null);
         EasyapiDefaultGenerator generator = new EasyapiDefaultGenerator();
@@ -597,4 +622,11 @@ public class GenerateCode implements EnableExtParameters, WrapResponseAbility, M
         this.secondModule = secondModule;
     }
 
+    public String getSpecFolder() {
+        return specFolder;
+    }
+
+    public void setSpecFolder(String specFolder) {
+        this.specFolder = specFolder;
+    }
 }

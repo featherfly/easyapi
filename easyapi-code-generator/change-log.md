@@ -1,3 +1,7 @@
+# 0.3.1 2022-07-12
+
+1. 修复生成代码时报java.util.ConcurrentModificationException错误的问题
+
 # 0.3.0 2022-06-28
 
 1. GenerateCode加入specFolder参数，设置后会把spec文件复制到该目录（和sourceFolder一样，都是output的子目录）

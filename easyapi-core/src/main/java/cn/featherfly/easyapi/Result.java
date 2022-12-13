@@ -16,6 +16,11 @@ public class Result<D> extends Response<D> {
      */
     @Override
     public String toString() {
-        return "Result " + new String(Serialization.serialize(this));
+        if (getData() != null) {
+            return "Result [code = " + getCode() + ", message = " + getMessage() + ", data = "
+                    + new String(Serialization.serialize(getData())) + "]";
+        } else {
+            return "Result [code =" + getCode() + ", message=" + getMessage() + "]";
+        }
     }
 }

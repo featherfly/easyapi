@@ -6,5 +6,4 @@ package cn.featherfly.easyapi;
  * @author zhongj
  */
 public class EmptyDataResult extends Result<Object> {
-
 }

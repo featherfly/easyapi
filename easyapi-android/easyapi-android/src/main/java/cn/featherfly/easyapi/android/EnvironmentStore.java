@@ -1,11 +1,12 @@
 package cn.featherfly.easyapi.android;
 
-import cn.featherfly.common.app.Platform;
-import cn.featherfly.common.app.Version;
+
 import cn.featherfly.common.flux.action.Action;
 import cn.featherfly.common.flux.store.Store;
 import cn.featherfly.common.flux.store.StoreAction;
 import cn.featherfly.common.location.LocationPoint;
+import cn.featherfly.common.model.app.Platform;
+import cn.featherfly.common.model.app.Version;
 import cn.featherfly.easyapi.Environment;
 import cn.featherfly.easyapi.EnvironmentImpl;
 import cn.featherfly.easyapi.android.flux.EnvironmentAction;

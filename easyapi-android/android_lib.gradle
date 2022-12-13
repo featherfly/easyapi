@@ -20,15 +20,6 @@ tasks.withType(Javadoc) {
     options.encoding = "UTF-8"
 }
 
-
-repositories {
-    mavenLocal()
-    maven {
-        url "https://maven.aliyun.com/nexus/content/groups/public/"
-    }
-    mavenCentral()
-}
-
 //jar {
 //    manifest.attributes 'Build-Name': archivesBaseName
 //    manifest.attributes 'Build-By': "zhong ji"

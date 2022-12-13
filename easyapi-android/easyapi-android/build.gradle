@@ -1,12 +1,12 @@
 apply from: rootDir.getAbsolutePath() +  '/android_maven_publish.gradle'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdk 32
+//    buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk 21
+        targetSdk 32
         versionCode 1
         versionName version
 
@@ -27,11 +27,12 @@ android {
 }
 
 dependencies {
-    api 'cn.featherfly.common:common-api:0.2.9'
-    api 'cn.featherfly.common:common-core:1.8.29'
+    api 'cn.featherfly.common:common-api:0.5.1'
+    api 'cn.featherfly.common:common-core:1.11.0'
     api 'cn.featherfly.common:common-flux:0.2.0'
-    api 'cn.featherfly.easyapi:easyapi-client:0.3.0'
-    api 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    api 'cn.featherfly.common:common-model:0.2.0'
+    api 'cn.featherfly.easyapi:easyapi-client:0.3.2'
+    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

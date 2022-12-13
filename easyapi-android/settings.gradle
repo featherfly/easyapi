@@ -1,2 +1,54 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        maven {
+            name 'aliyun'
+//            url 'https://maven.aliyun.com/repository/central'
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            name 'aliyun-google'
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            name 'aliyun-gradle-plugin'
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven {
+            name 'aliyun-grails-core'
+            url 'https://maven.aliyun.com/repository/grails-core'
+        }
+        mavenCentral()
+        google()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        maven { url 'https://jitpack.io' }
+        maven {
+            name 'aliyun'
+//            url 'https://maven.aliyun.com/repository/central'
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            name 'aliyun-google'
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            name 'aliyun-gradle-plugin'
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven {
+            name 'aliyun-grails-core'
+            url 'https://maven.aliyun.com/repository/grails-core'
+        }
+        mavenCentral()
+        google()
+    }
+}
 include ':easyapi-android'
 rootProject.name = "easyapi-android"

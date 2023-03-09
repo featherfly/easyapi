@@ -93,7 +93,7 @@ const copyAxios = (done) => {
 
 const copyReleaseFile = (done) => {
     gulp.src(['./src/*.d.ts']).pipe(gulp.dest(distDir)).pipe(gulp.dest(libDir));
-    gulp.src(['index.js', 'index.mjs', 'package.json']).pipe(gulp.dest(releaseDir));
+    gulp.src(['index.js', 'index.mjs', 'package.json', 'README.md']).pipe(gulp.dest(releaseDir));
     done();
 };
 

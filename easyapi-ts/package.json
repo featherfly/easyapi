@@ -1,5 +1,5 @@
 {
-  "name": "easyapi-ts",
+  "name": "@yufei-featherfly/easyapi-ts",
   "version": "0.2.2",
   "main": "index.js",
   "types": "dist/request.d.ts",
@@ -24,12 +24,12 @@
   "scripts": {
     "build": "yarn build:uni && yarn build:axios",
     "build:uni": "gulp clean && gulp copyRelease && gulp compile && gulp copyUni && gulp uglify && gulp cleanCompile",
-    "build:axios": "gulp clean && gulp copyRelease && gulp compile && gulp buildAxios && gulp uglify && gulp cleanCompile",
+    "build:axios": "gulp clean && gulp copyRelease && gulp compile && gulp copyAxios && gulp uglify && gulp cleanCompile",
     "build:uni2": "gulp clean && gulp buildUni && gulp cleanCompile",
     "build:axios2": "gulp clean && gulp buildAxios && gulp cleanCompile",
     "pub": "npm run pub:uni && npm run pub:axios",
-    "pub:uni": "yarn build:uni && npm publish ./release",
-    "pub:axios": "yarn build:axios && npm publish ./release"
+    "pub:uni": "npm run build:uni && npm login && npm publish ./release --access public",
+    "pub:axios": "npm run build:axios && npm login && npm publish ./release --access public"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",

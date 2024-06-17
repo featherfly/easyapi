@@ -1,0 +1,60 @@
+plugins {
+    id 'org.hidetake.swagger.generator' version '2.19.2'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'src/gen/java'
+//            srcDir 'src/gen/springmvc/java'
+//            srcDir 'src/gen/android/java'
+//            srcDir 'src/gen/springclound/java-api'
+//            srcDir 'src/gen/springclound/java-client'
+//            srcDir 'src/gen/springclound/java-server'
+        }
+    }
+//    gen {
+//        java {
+//            srcDir 'src/gen/java-gen-springmvc'
+//            srcDir 'src/gen-api/java'
+//            srcDir 'src/gen-client/java'
+//            srcDir 'src/gen-server/java'
+//        }
+//    }
+}
+
+dependencies {
+//    api group: 'log4j', name: 'log4j', version: '1.2.17'
+//    api group: 'org.apache.ant', name: 'ant', version: '1.9.7'
+    api ffcommon
+//    api group: 'io.swagger', name: 'swagger-codegen', version: '2.2.2'
+    //api group: 'io.swagger.codegen.v3', name: 'swagger-codegen', version: '3.0.20'
+    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.23'
+    //api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.50'
+
+
+    api 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+    api 'com.squareup.okhttp3:okhttp:3.14.9'
+    
+    implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
+    //implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.8'
+    //implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.0'
+
+    testImplementation group: 'org.testng', name: 'testng', version: '6.11'
+
+
+    swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.41'             // Swagger Codegen V2
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.57'  // or Swagger Codegen V3
+    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'     // or OpenAPI Generator
+    //swaggerCodegen 'org.openapitools:openapi-generator-cli:7.6.0'     // or OpenAPI Generator
+}
+
+swaggerSources {
+    petstore {
+        inputFile = file('api/order-api.yaml')
+        code {
+            language = 'spring'
+        }
+    }
+}

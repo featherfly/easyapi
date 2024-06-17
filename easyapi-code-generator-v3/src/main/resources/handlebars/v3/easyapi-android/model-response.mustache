@@ -1,0 +1,16 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import cn.featherfly.easyapi.Result;
+{{#models}}
+
+{{#model}}{{#description}}
+/**
+ * {{description}}
+ **/{{/description}}
+public class {{classname}}Response extends Result<{{classname}}>{
+}
+{{/model}}
+{{/models}}

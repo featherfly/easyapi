@@ -1,0 +1,16 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+// import {Result} from 'easy-api'
+import { Response } from '{{apiImportPath}}'
+import { {{classname}} } from './{{classname}}'
+
+{{#models}}
+{{#model}}{{#description}}
+/**
+ * {{description}}
+ **/{{/description}}
+export interface {{classname}}Response extends Response<{{classname}}>{
+}
+{{/model}}
+{{/models}}

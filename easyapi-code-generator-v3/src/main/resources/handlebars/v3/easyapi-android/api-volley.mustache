@@ -1,0 +1,61 @@
+package {{apiPackage}};
+
+import {{modelPackage}}.*;
+
+{{#annotationImport}}import {{annotationImport}};
+{{/annotationImport}}
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.cdmhzx.server.api.ApiInvoker;
+import com.cdmhzx.server.api.CallBack;
+import com.cdmhzx.server.api.DomainManager;
+import com.cdmhzx.server.api.HttpRequest;
+import com.cdmhzx.server.api.HttpSendBodyApiInvoker;
+import com.cdmhzx.server.api.HttpFormParamApiInvoker;
+import com.cdmhzx.server.api.HttpResponse;
+import com.cdmhzx.server.api.Result;
+import com.cdmhzx.volley.JacksonRequest;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+{{#operations}}
+/**
+ * the {{baseName}} API
+ */
+public abstract class Abstract{{classname}} {
+
+    protected HttpRequest httpRequest;
+
+    protected DomainManager domainManager;
+
+    public Abstract{{classname}}(HttpRequest httpRequest, DomainManager domainManager) {
+        this.httpRequest = httpRequest;
+        this.domainManager = domainManager;
+    }
+
+    {{#operation}}
+    /**
+     * {{{summary}}}.
+     * {{{notes}}}.
+     */
+    public ApiInvoker<{{{returnType}}}Result> {{nickname}}({{#allParams}}
+{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>requestParams}}{{#hasMore}},{{/hasMore}}{{/allParams}}){
+        final String path = domainManager.getDomain("{{domainGroup}}")
+               + "{{apiPath}}/{{baseName}}{{path}}".replaceAll("\\{format\\}","json"){{#pathParams}}.replaceAll("\\{" + "{{baseName}}" + "\\}", {{paramName}} + ""){{/pathParams}};
+        Map<String, String> headers = new HashMap<>();
+        {{#bodyParams}}return new HttpSendBodyApiInvoker<{{returnType}}Result>(Request.Method.{{httpMethod}}, path, {{paramName}}, headers, {{returnType}}Result.class, httpRequest);{{/bodyParams}}
+        {{^bodyParams}}Map<String, String> params = new HashMap<>();
+        {{#allParams}}{{>setParams}}
+        {{/allParams}}return new HttpFormParamApiInvoker<{{returnType}}Result>(Request.Method.{{httpMethod}}, path, params, headers, {{returnType}}Result.class, httpRequest);{{/bodyParams}}
+    }
+    {{/operation}}
+}
+{{/operations}}

@@ -35,12 +35,15 @@ def getRepositoryPassword() {
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set("sources")
     from sourceSets.main.java.srcDirs
 }
 
 task javadocJar(type: Jar, dependsOn:javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
     from javadoc.destinationDir
 }
 

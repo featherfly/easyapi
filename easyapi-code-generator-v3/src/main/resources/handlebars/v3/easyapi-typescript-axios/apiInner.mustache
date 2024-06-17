@@ -1,0 +1,209 @@
+/* tslint:disable */
+/* eslint-disable */
+{{>licenseInfo}}
+
+import { request, Response, ValidationError } from '{{apiImportPath}}'
+// Some imports not used depending on template conditions
+// @ts-ignore
+
+const BASE_PATH = "{{{basePath}}}".replace(/^http[s]?:\/\/[\w.]*/, "");
+
+{{#imports}}
+import { {{import}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}/{{import}}';
+{{/imports}}
+
+{{#operations}}
+{{#operation}}
+{{#contents}}
+/**
+ * {{&notes}}
+ {{#summary}}
+ * @summary {{&summary}}
+ {{/summary}}
+ {{#parameters}}
+ * @param {{braces "left"}}{{dataType}}{{braces "right"}} {{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}} {{description}}
+ {{/parameters}}
+ * @param {*} [options] Override http request option.
+ * @throws {ValidationError}
+ */
+export function {{nickname}}({{#parameters}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/parameters}}options: any = {}): Promise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Response<any>{{/returnType}}> {
+{{#parameters}}
+{{#required}}
+    // verify required parameter '{{paramName}}' is not null or undefined
+    if ({{paramName}} === null || {{paramName}} === undefined) {
+        throw new ValidationError('{{paramName}}','Required parameter {{paramName}} was null or undefined when calling {{nickname}}.');
+    }
+{{/required}}
+{{/parameters}}
+    const localVarPath = `{{{path}}}`{{#pathParams}}
+        .replace(`{${"{{baseName}}"}}`, encodeURIComponent(String({{paramName}}))){{/pathParams}};
+    // use dummy base URL string because the URL constructor only accepts absolute URLs.
+    const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+    const localVarRequestOptions = { method: '{{httpMethod}}', ...options};
+    const localVarHeaderParameter = {} as any;
+    const localVarQueryParameter = {} as any;{{#vendorExtensions}}{{#hasFormParams}}
+    const localVarFormParams = new {{^multipartFormData}}URLSearchParams(){{/multipartFormData}}{{#multipartFormData}}FormData(){{/multipartFormData}};{{/hasFormParams}}{{/vendorExtensions}}
+
+{{#authMethods}}
+    // authentication {{name}} required
+    {{#isApiKey}}
+    {{#isKeyInHeader}}
+    if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+            ? await configuration.apiKey("{{keyParamName}}")
+            : await configuration.apiKey;
+        localVarHeaderParameter["{{keyParamName}}"] = localVarApiKeyValue;
+    }
+    {{/isKeyInHeader}}
+    {{#isKeyInQuery}}
+    if (configuration && configuration.apiKey) {
+        const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+            ? await configuration.apiKey("{{keyParamName}}")
+            : await configuration.apiKey;
+        localVarQueryParameter["{{keyParamName}}"] = localVarApiKeyValue;
+    }
+    {{/isKeyInQuery}}
+    {{/isApiKey}}
+    {{#isBasicBasic}}
+    // http basic authentication required
+    if (configuration && (configuration.username || configuration.password)) {
+        localVarRequestOptions["auth"] = { username: configuration.username, password: configuration.password };
+    }
+    {{/isBasicBasic}}
+    {{#isBasicBearer}}
+    // http bearer authentication required
+    if (configuration && configuration.accessToken) {
+        const accessToken = typeof configuration.accessToken === 'function'
+            ? await configuration.accessToken()
+            : await configuration.accessToken;
+        localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
+    }
+    {{/isBasicBearer}}
+    {{#isOAuth}}
+    // oauth required
+    if (configuration && configuration.accessToken) {
+        const localVarAccessTokenValue = typeof configuration.accessToken === 'function'
+            ? await configuration.accessToken("{{name}}", [{{#scopes}}"{{{scope}}}"{{^@last}}, {{/@last}}{{/scopes}}])
+            : await configuration.accessToken;
+        localVarHeaderParameter["Authorization"] = "Bearer " + localVarAccessTokenValue;
+    }
+    {{/isOAuth}}
+
+{{/authMethods}}
+{{#queryParams}}
+    {{#isListContainer}}
+    if ({{paramName}}) {
+    {{#isCollectionFormatMulti}}
+        localVarQueryParameter['{{baseName}}'] = {{paramName}};
+    {{/isCollectionFormatMulti}}
+    {{^isCollectionFormatMulti}}
+        localVarQueryParameter['{{baseName}}'] = {{paramName}}.join(COLLECTION_FORMATS.{{collectionFormat}});
+    {{/isCollectionFormatMulti}}
+    }
+    {{/isListContainer}}
+    {{^isListContainer}}
+    if ({{paramName}} !== undefined) {
+        {{#isDateTime}}
+        localVarQueryParameter['{{baseName}}'] = ({{paramName}} as any instanceof Date) ?
+            ({{paramName}} as any).toLocaleString() : {{paramName}};
+        {{/isDateTime}}
+        {{^isDateTime}}
+        {{#isDate}}
+        localVarQueryParameter['{{baseName}}'] = ({{paramName}} as any instanceof Date) ?
+            ({{paramName}} as any).toLocaleDateString() : {{paramName}};
+        {{/isDate}}
+        {{^isDate}}
+        localVarQueryParameter['{{baseName}}'] = {{paramName}};
+        {{/isDate}}
+        {{/isDateTime}}
+    }
+    {{/isListContainer}}
+
+{{/queryParams}}
+{{#headerParams}}
+    {{#isListContainer}}
+    if ({{paramName}}) {
+        let mapped = {{paramName}}.map(value => (<any>"{{{dataType}}}" !== "Array<string>") ? JSON.stringify(value) : (value || ""));
+        localVarHeaderParameter['{{baseName}}'] = mapped.join(COLLECTION_FORMATS["{{collectionFormat}}"]);
+    }
+    {{/isListContainer}}
+    {{^isListContainer}}
+    if ({{paramName}} !== undefined && {{paramName}} !== null) {
+        {{#isString}}
+        localVarHeaderParameter['{{baseName}}'] = String({{paramName}});
+        {{/isString}}
+        {{^isString}}
+        localVarHeaderParameter['{{baseName}}'] = String(JSON.stringify({{paramName}}));
+        {{/isString}}
+    }
+    {{/isListContainer}}
+
+{{/headerParams}}
+{{#vendorExtensions}}
+{{#formParams}}
+    {{#isListContainer}}
+    if ({{paramName}}) {
+    {{#isCollectionFormatMulti}}
+        {{paramName}}.forEach((element) => {
+            localVarFormParams.append('{{baseName}}', element as any);
+        })
+    {{/isCollectionFormatMulti}}
+    {{^isCollectionFormatMulti}}{{^multipartFormData}}
+        localVarFormParams.set('{{baseName}}', {{paramName}}.join(COLLECTION_FORMATS.{{collectionFormat}}));{{/multipartFormData}}{{#multipartFormData}}
+        localVarFormParams.append('{{baseName}}', {{paramName}}.join(COLLECTION_FORMATS.{{collectionFormat}}));{{/multipartFormData}}
+    {{/isCollectionFormatMulti}}
+    }{{/isListContainer}}
+    {{^isListContainer}}
+    if ({{paramName}} !== undefined) { {{^multipartFormData}}
+        localVarFormParams.set('{{baseName}}', {{paramName}} as any);{{/multipartFormData}}{{#multipartFormData}}
+        localVarFormParams.append('{{baseName}}', {{paramName}} as any);{{/multipartFormData}}
+    }
+    {{/isListContainer}}
+{{/formParams}}{{/vendorExtensions}}
+{{#vendorExtensions}}{{#hasFormParams}}{{^multipartFormData}}
+    localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';{{/multipartFormData}}{{#multipartFormData}}
+    localVarHeaderParameter['Content-Type'] = 'multipart/form-data';{{/multipartFormData}}
+{{/hasFormParams}}{{/vendorExtensions}}
+{{#bodyParam}}
+    {{^consumes}}
+    localVarHeaderParameter['Content-Type'] = 'application/json';
+    {{/consumes}}
+    {{#consumes}}
+    localVarHeaderParameter['Content-Type'] = '{{{mediaType}}}';
+    {{/consumes}}
+
+{{/bodyParam}}
+    const query = new URLSearchParams(localVarUrlObj.search);
+    for (const key in localVarQueryParameter) {
+        query.set(key, localVarQueryParameter[key]);
+    }
+    for (const key in options.query) {
+        query.set(key, options.query[key]);
+    }
+    localVarUrlObj.search = (new URLSearchParams(query)).toString();
+    let headersFromBaseOptions = {};
+    localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+{{#hasFormParams}}
+    localVarRequestOptions.data = localVarFormParams{{#vendorExtensions}}{{^multipartFormData}}.toString(){{/multipartFormData}}{{/vendorExtensions}};
+{{/hasFormParams}}
+{{#bodyParam}}
+    const needsSerialization = (typeof {{paramName}} !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+    localVarRequestOptions.data =  needsSerialization ? JSON.stringify({{paramName}} !== undefined ? {{paramName}} : {}) : ({{paramName}} || "");
+{{/bodyParam}}
+
+    localVarRequestOptions.url = BASE_PATH + localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash;
+    return new Promise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Response<any>{{/returnType}}>((resolve,reject) => {
+        request(localVarRequestOptions).then((res) => {
+            resolve(res);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}
+{{/contents}}
+{{/operation}}
+{{/operations}}
+
+export default {
+{{#operations}}{{#operation}}{{#contents}}{{nickname}},{{/contents}}{{/operation}}{{/operations}}
+}

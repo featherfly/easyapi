@@ -32,7 +32,7 @@ dependencies {
     api 'cn.featherfly.common:common-flux:0.2.0'
     api 'cn.featherfly.common:common-model:0.2.0'
     api 'cn.featherfly.easyapi:easyapi-client:0.3.2'
-    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    api 'io.reactivex.rxjava3:rxandroid:3.0.2@aar'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

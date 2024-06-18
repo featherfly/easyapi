@@ -1,4 +1,4 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
 import java.util.ArrayList;
 import java.util.HashMap;

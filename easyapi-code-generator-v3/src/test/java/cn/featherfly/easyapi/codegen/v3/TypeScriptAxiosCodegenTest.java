@@ -1,8 +1,8 @@
 package cn.featherfly.easyapi.codegen.v3;
 
-import cn.featherfly.easyapi.GenerateCode;
+import cn.featherfly.easyapi.codegen.GenerateCode;
 import cn.featherfly.easyapi.codegen.Constants;
-import cn.featherfly.easyapi.v3.typescript.TypeScriptAxiosCodegen;
+import cn.featherfly.easyapi.codegen.v3.typescript.TypeScriptAxiosCodegen;
 
 /**
  * The type TypeScriptAxiosCodegenTest.

@@ -1,10 +1,10 @@
 package cn.featherfly.easyapi.codegen.v3;
 
 import cn.featherfly.easyapi.codegen.Constants;
-import cn.featherfly.easyapi.ExtCodegenParameter;
-import cn.featherfly.easyapi.ExtParameter;
-import cn.featherfly.easyapi.GenerateCode;
-import cn.featherfly.easyapi.v3.springmvc.SpringCloundMvcCodegen;
+import cn.featherfly.easyapi.codegen.ExtCodegenParameter;
+import cn.featherfly.easyapi.codegen.ExtParameter;
+import cn.featherfly.easyapi.codegen.GenerateCode;
+import cn.featherfly.easyapi.codegen.v3.spring.SpringCloundMvcCodegen;
 
 public class SpringCloundMvcCodegenTest {
 

@@ -1,19 +1,14 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
 import static io.swagger.codegen.v3.CodegenConstants.IS_ENUM_EXT_NAME;
 import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +60,7 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
 
     protected String title = "easyapi java code";
 
-    protected Collection<ExtParameter> extParameters = new HashSet<>();
+    protected Set<ExtParameter> extParameters = new LinkedHashSet<>();
 
     public EasyapiAbstractJavaCodegen() {
         //        setModule(module);
@@ -117,7 +112,8 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
         }
         params.unescapedDescription = params.description;
         operation.allParams.add(params);
-        operation.allParams = addHasMore(operation.allParams);
+        // TODO 测试
+        // operation.allParams = addHasMore(operation.allParams);
     }
 
     private void addExtParameterImports(Map<String, Object> objs, String importClass) {

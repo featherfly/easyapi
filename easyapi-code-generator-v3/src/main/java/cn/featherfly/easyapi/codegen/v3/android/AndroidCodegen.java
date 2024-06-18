@@ -1,10 +1,10 @@
-package cn.featherfly.easyapi.v3.android;
+package cn.featherfly.easyapi.codegen.v3.android;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
-import cn.featherfly.easyapi.EasyapiAbstractJavaCodegen;
-import cn.featherfly.easyapi.WrapResponseAbility;
+import cn.featherfly.easyapi.codegen.EasyapiAbstractJavaCodegen;
+import cn.featherfly.easyapi.codegen.WrapResponseAbility;
 import io.swagger.codegen.v3.CodegenType;
 
 public class AndroidCodegen extends EasyapiAbstractJavaCodegen implements WrapResponseAbility {

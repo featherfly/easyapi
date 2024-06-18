@@ -11,6 +11,7 @@ import io.swagger.annotations.*;
 {{^useOas2}}
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -75,7 +76,7 @@ public interface {{classname}}Delegate {
     /**
      * @see {{classname}}#{{operationId}}
      */
-    {{#defaultInterfaces}}default {{/defaultInterfaces}}{{#responseWrapper}}{{.}}<{{/responseWrapper}}ResponseEntity<{{>returnTypes}}>{{#responseWrapper}}>{{/responseWrapper}} {{operationId}}({{#parameters}}{{^isBinary}} {{>optionalDataType}} {{/isBinary}}{{#isBinary}}MultipartFile{{/isBinary}} {{paramName}}{{#hasMore}},
+    {{#defaultInterfaces}}default {{/defaultInterfaces}}{{>returnTypes}} {{operationId}}({{#parameters}}{{^isBinary}} {{>optionalDataType}} {{/isBinary}}{{#isBinary}}MultipartFile{{/isBinary}} {{paramName}}{{#hasMore}},
         {{/hasMore}}{{/parameters}}){{^defaultInterfaces}};{{/defaultInterfaces}}{{#defaultInterfaces}} {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
         {{#examples}}

@@ -1,4 +1,4 @@
-package cn.featherfly.easyapi.v3.typescript;
+package cn.featherfly.easyapi.codegen.v3.typescript;
 
 import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
 
@@ -14,10 +14,10 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.featherfly.common.lang.Lang;
-import cn.featherfly.easyapi.EnableExtParameters;
-import cn.featherfly.easyapi.ExtParameter;
-import cn.featherfly.easyapi.ModuleAbility;
-import cn.featherfly.easyapi.WrapResponseAbility;
+import cn.featherfly.easyapi.codegen.EnableExtParameters;
+import cn.featherfly.easyapi.codegen.ExtParameter;
+import cn.featherfly.easyapi.codegen.ModuleAbility;
+import cn.featherfly.easyapi.codegen.WrapResponseAbility;
 import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenModel;
 import io.swagger.codegen.v3.CodegenOperation;

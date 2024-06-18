@@ -1,7 +1,28 @@
-package cn.featherfly.easyapi.v3.springmvc;
+package cn.featherfly.easyapi.codegen.v3.spring;
 
-import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.Template;
+import static io.swagger.codegen.v3.CodegenConstants.HAS_ENUMS_EXT_NAME;
+import static io.swagger.codegen.v3.CodegenConstants.IS_ENUM_EXT_NAME;
+import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
+
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.samskivert.mustache.Mustache.Lambda;
+
+import cn.featherfly.easyapi.codegen.EasyapiAbstractJavaCodegen;
 import io.swagger.codegen.v3.CliOption;
 import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenContent;
@@ -16,30 +37,17 @@ import io.swagger.codegen.v3.SupportingFile;
 import io.swagger.codegen.v3.generators.features.BeanValidationFeatures;
 import io.swagger.codegen.v3.generators.features.NotNullAnnotationFeatures;
 import io.swagger.codegen.v3.generators.features.OptionalFeatures;
-import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.codegen.v3.generators.util.OpenAPIUtil;
 import io.swagger.codegen.v3.utils.URLPathUtil;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.swagger.v3.oas.models.media.Schema;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
+public abstract class SpringCloundCodegen extends EasyapiAbstractJavaCodegen
+    implements BeanValidationFeatures, OptionalFeatures, NotNullAnnotationFeatures {
 
-import static io.swagger.codegen.v3.CodegenConstants.HAS_ENUMS_EXT_NAME;
-import static io.swagger.codegen.v3.CodegenConstants.IS_ENUM_EXT_NAME;
-import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
-
-public class SpringCodegen extends AbstractJavaCodegen implements BeanValidationFeatures, OptionalFeatures, NotNullAnnotationFeatures {
-    static Logger LOGGER = LoggerFactory.getLogger(SpringCodegen.class);
+    static Logger LOGGER = LoggerFactory.getLogger(SpringCloundCodegen.class);
     public static final String DEFAULT_LIBRARY = "spring-boot";
     public static final String TITLE = "title";
     public static final String CONFIG_PACKAGE = "configPackage";
@@ -82,13 +90,41 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     protected boolean throwsException = false;
     private boolean notNullJacksonAnnotation = false;
 
-    public SpringCodegen() {
+    public SpringCloundCodegen() {
         super();
-        outputFolder = "generated-code/javaSpring";
-        apiPackage = "io.swagger.api";
-        modelPackage = "io.swagger.model";
-        invokerPackage = "io.swagger.api";
+        //        setLibrary("feign");
+        setDateLibrary("legacy");
+        super.processOpts();
+        //        setDateLibrary("java8-localdatetime");
+        outputFolder = "generated-code/javaSpringMVC";
+        modelTemplateFiles.put("model.mustache", ".java");
+
+        apiDocPath = apiDocPath + "/" + module;
+        modelDocPath = modelDocPath + "/" + module;
+
         artifactId = "swagger-spring";
+        apiPackage = "cn.featherfly.easyapi.api";
+        modelPackage = "cn.featherfly.easyapi.model";
+        invokerPackage = "cn.featherfly.easyapi.api";
+        configPackage = "cn.featherfly.easyapi.configuration";
+        templateDir = "codegen/" + getDefaultTemplateDir();
+
+        setDelegatePattern(true);
+
+        //		modelPackage = "mobi.meihuo.platform.v2.web.api.%s.dto";
+        //		apiPackage = "mobi.meihuo.platform.v2.web.api.%s";
+
+        setInvokerPackage(invokerPackage);
+        setGroupId(groupId);
+        setArtifactId(artifactId);
+        setArtifactVersion(artifactVersion);
+        setTitle(title);
+        setConfigPackage(configPackage);
+        setDefaultApiPath(defaultApiPath);
+        additionalProperties.put("apiPackage", apiPackage());
+        additionalProperties.put("modelPackage", modelPackage());
+        languageSpecificPrimitives = new HashSet<>(
+            Arrays.asList("String", "boolean", "Boolean", "Double", "Integer", "Long", "Float"));
 
         additionalProperties.put(CONFIG_PACKAGE, configPackage);
         additionalProperties.put(BASE_PACKAGE, basePackage);
@@ -99,24 +135,31 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         cliOptions.add(new CliOption(TITLE, "server title name or client service name"));
         cliOptions.add(new CliOption(CONFIG_PACKAGE, "configuration package for generated code"));
         cliOptions.add(new CliOption(BASE_PACKAGE, "base package (invokerPackage) for generated code"));
-        cliOptions.add(CliOption.newBoolean(INTERFACE_ONLY, "Whether to generate only API interface stubs without the server files."));
-        cliOptions.add(CliOption.newBoolean(DELEGATE_PATTERN, "Whether to generate the server files using the delegate pattern"));
-        cliOptions.add(CliOption.newBoolean(SINGLE_CONTENT_TYPES, "Whether to select only one produces/consumes content-type by operation."));
+        cliOptions.add(CliOption.newBoolean(INTERFACE_ONLY,
+            "Whether to generate only API interface stubs without the server files."));
+        cliOptions.add(
+            CliOption.newBoolean(DELEGATE_PATTERN, "Whether to generate the server files using the delegate pattern"));
+        cliOptions.add(CliOption.newBoolean(SINGLE_CONTENT_TYPES,
+            "Whether to select only one produces/consumes content-type by operation."));
         cliOptions.add(CliOption.newBoolean(ASYNC, "use async Callable controllers"));
-        cliOptions.add(new CliOption(RESPONSE_WRAPPER, "wrap the responses in given type (Future,Callable,CompletableFuture,ListenableFuture,DeferredResult,HystrixCommand,RxObservable,RxSingle or fully qualified type)"));
+        cliOptions.add(new CliOption(RESPONSE_WRAPPER,
+            "wrap the responses in given type (Future,Callable,CompletableFuture,ListenableFuture,DeferredResult,HystrixCommand,RxObservable,RxSingle or fully qualified type)"));
         cliOptions.add(CliOption.newBoolean(USE_TAGS, "use tags for creating interface and controller classnames"));
-        cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
+        cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API " + "annotations"));
         cliOptions.add(CliOption.newBoolean(IMPLICIT_HEADERS, "Use of @ApiImplicitParams for headers."));
-        cliOptions.add(CliOption.newBoolean(SWAGGER_DOCKET_CONFIG, "Generate Spring Swagger Docket configuration class."));
-        cliOptions.add(CliOption.newBoolean(USE_OPTIONAL,
-                "Use Optional container for optional parameters"));
-        cliOptions.add(CliOption.newBoolean(TARGET_OPENFEIGN,"Generate for usage with OpenFeign (instead of feign)"));
-        cliOptions.add(CliOption.newBoolean(DEFAULT_INTERFACES, "Generate default implementations for interfaces").defaultValue("true"));
-        cliOptions.add(CliOption.newBoolean(THROWS_EXCEPTION, "Throws Exception in operation methods").defaultValue("false"));
+        cliOptions
+            .add(CliOption.newBoolean(SWAGGER_DOCKET_CONFIG, "Generate Spring Swagger Docket configuration class."));
+        cliOptions.add(CliOption.newBoolean(USE_OPTIONAL, "Use Optional container for optional parameters"));
+        cliOptions.add(CliOption.newBoolean(TARGET_OPENFEIGN, "Generate for usage with OpenFeign (instead of feign)"));
+        cliOptions.add(CliOption.newBoolean(DEFAULT_INTERFACES, "Generate default implementations for interfaces")
+            .defaultValue("true"));
+        cliOptions
+            .add(CliOption.newBoolean(THROWS_EXCEPTION, "Throws Exception in operation methods").defaultValue("false"));
 
         supportedLibraries.put(DEFAULT_LIBRARY, "Spring-boot Server application using the SpringFox integration.");
         supportedLibraries.put(SPRING_MVC_LIBRARY, "Spring-MVC Server application using the SpringFox integration.");
-        supportedLibraries.put(SPRING_CLOUD_LIBRARY, "Spring-Cloud-Feign client with Spring-Boot auto-configured settings.");
+        supportedLibraries.put(SPRING_CLOUD_LIBRARY,
+            "Spring-Cloud-Feign client with Spring-Boot auto-configured settings.");
         setLibrary(DEFAULT_LIBRARY);
 
         CliOption library = new CliOption(CodegenConstants.LIBRARY, "library template (sub-template) to use");
@@ -124,7 +167,6 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         library.setEnum(supportedLibraries);
         library.setDefault(DEFAULT_LIBRARY);
         cliOptions.add(library);
-
         CliOption springBootVersionOption = new CliOption(SPRING_BOOT_VERSION, "Spring boot version");
         Map<String, String> springBootEnum = new HashMap<>();
         springBootEnum.put("1.5.22.RELEASE", "1.5.22.RELEASE");
@@ -135,7 +177,39 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     }
 
     @Override
-    protected void addCodegenContentParameters(CodegenOperation codegenOperation, List<CodegenContent> codegenContents) {
+    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation,
+        Map<String, Schema> schemas, OpenAPI openAPI) {
+        CodegenOperation op = super.fromOperation(path, httpMethod, operation, schemas, openAPI);
+        String notes = op.notes;
+        if (notes != null) {
+            List<CodegenParameter> codegenParameters = new ArrayList<>();
+            extParameters.forEach(extParameter -> {
+                if (notes.contains(extParameter.getName())) {
+                    codegenParameters.add(extParameter.getCodegenParameter().copy());
+                }
+            });
+            if (!codegenParameters.isEmpty()) {
+                for (CodegenContent content : op.getContents()) {
+                    addParameters(content, codegenParameters);
+                }
+            }
+        }
+        // process hasMore
+        for (CodegenContent content : op.getContents()) {
+            for (CodegenParameter parameter : content.getParameters()) {
+                parameter.vendorExtensions.put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.TRUE);
+            }
+            if (!content.getParameters().isEmpty()) {
+                content.getParameters().get(content.getParameters().size() - 1).vendorExtensions
+                    .put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.FALSE);
+            }
+        }
+        return op;
+    }
+
+    @Override
+    protected void addCodegenContentParameters(CodegenOperation codegenOperation,
+        List<CodegenContent> codegenContents) {
         for (CodegenContent content : codegenContents) {
             addParameters(content, codegenOperation.headerParams);
             addParameters(content, codegenOperation.queryParams);
@@ -143,11 +217,6 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             addParameters(content, codegenOperation.cookieParams);
             addParameters(content, codegenOperation.bodyParams);
         }
-    }
-
-    @Override
-    public CodegenType getTag() {
-        return CodegenType.SERVER;
     }
 
     @Override
@@ -164,27 +233,27 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     public void processOpts() {
         // Process java8 option before common java ones to change the default dateLibrary to java8.
         if (additionalProperties.containsKey(JAVA8_MODE)) {
-            this.setJava8(Boolean.valueOf(additionalProperties.get(JAVA8_MODE).toString()));
+            setJava8(Boolean.valueOf(additionalProperties.get(JAVA8_MODE).toString()));
         }
 
         if (additionalProperties.containsKey(DATE_LIBRARY)) {
             if (additionalProperties.get(DATE_LIBRARY).toString().startsWith("java8")) {
-                this.setJava8(true);
+                setJava8(true);
             }
         }
-        if (this.java8) {
+        if (java8) {
             additionalProperties.put("javaVersion", "1.8");
             additionalProperties.put("jdk8", true);
             if (!additionalProperties.containsKey(DATE_LIBRARY)) {
                 setDateLibrary("java8");
             }
         } else {
-            this.defaultInterfaces = false;
+            defaultInterfaces = false;
         }
 
-        // set invokerPackage as basePackage
+        // set invokerPac as basePackage
         if (additionalProperties.containsKey(CodegenConstants.INVOKER_PACKAGE)) {
-            this.setBasePackage((String) additionalProperties.get(CodegenConstants.INVOKER_PACKAGE));
+            setBasePackage((String) additionalProperties.get(CodegenConstants.INVOKER_PACKAGE));
             additionalProperties.put(BASE_PACKAGE, basePackage);
             LOGGER.info("Set base package to invoker package (" + basePackage + ")");
         }
@@ -198,70 +267,70 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         apiDocTemplateFiles.remove("api_doc.mustache");
 
         if (additionalProperties.containsKey(TITLE)) {
-            this.setTitle((String) additionalProperties.get(TITLE));
+            setTitle((String) additionalProperties.get(TITLE));
         }
 
         if (additionalProperties.containsKey(CONFIG_PACKAGE)) {
-            this.setConfigPackage((String) additionalProperties.get(CONFIG_PACKAGE));
+            setConfigPackage((String) additionalProperties.get(CONFIG_PACKAGE));
         }
 
         if (additionalProperties.containsKey(BASE_PACKAGE)) {
-            this.setBasePackage((String) additionalProperties.get(BASE_PACKAGE));
+            setBasePackage((String) additionalProperties.get(BASE_PACKAGE));
         }
 
         if (additionalProperties.containsKey(INTERFACE_ONLY)) {
-            this.setInterfaceOnly(Boolean.valueOf(additionalProperties.get(INTERFACE_ONLY).toString()));
+            setInterfaceOnly(Boolean.valueOf(additionalProperties.get(INTERFACE_ONLY).toString()));
         }
 
         if (additionalProperties.containsKey(THROWS_EXCEPTION)) {
-            this.setThrowsException(Boolean.valueOf(additionalProperties.get(THROWS_EXCEPTION).toString()));
+            setThrowsException(Boolean.valueOf(additionalProperties.get(THROWS_EXCEPTION).toString()));
             additionalProperties.put(THROWS_EXCEPTION, throwsException);
         }
 
         if (additionalProperties.containsKey(DELEGATE_PATTERN)) {
-            this.setDelegatePattern(Boolean.valueOf(additionalProperties.get(DELEGATE_PATTERN).toString()));
+            setDelegatePattern(Boolean.valueOf(additionalProperties.get(DELEGATE_PATTERN).toString()));
         }
 
         if (additionalProperties.containsKey(SINGLE_CONTENT_TYPES)) {
-            this.setSingleContentTypes(Boolean.valueOf(additionalProperties.get(SINGLE_CONTENT_TYPES).toString()));
+            setSingleContentTypes(Boolean.valueOf(additionalProperties.get(SINGLE_CONTENT_TYPES).toString()));
         }
 
         if (additionalProperties.containsKey(ASYNC)) {
-            this.setAsync(Boolean.valueOf(additionalProperties.get(ASYNC).toString()));
+            setAsync(Boolean.valueOf(additionalProperties.get(ASYNC).toString()));
         }
 
         if (additionalProperties.containsKey(RESPONSE_WRAPPER)) {
-            this.setResponseWrapper((String) additionalProperties.get(RESPONSE_WRAPPER));
+            setResponseWrapper((String) additionalProperties.get(RESPONSE_WRAPPER));
         }
 
         if (additionalProperties.containsKey(USE_TAGS)) {
-            this.setUseTags(Boolean.valueOf(additionalProperties.get(USE_TAGS).toString()));
+            setUseTags(Boolean.valueOf(additionalProperties.get(USE_TAGS).toString()));
         }
 
         if (additionalProperties.containsKey(USE_BEANVALIDATION)) {
-            this.setUseBeanValidation(convertPropertyToBoolean(USE_BEANVALIDATION));
+            setUseBeanValidation(convertPropertyToBoolean(USE_BEANVALIDATION));
         }
 
         if (additionalProperties.containsKey(USE_OPTIONAL)) {
-            this.setUseOptional(convertPropertyToBoolean(USE_OPTIONAL));
+            setUseOptional(convertPropertyToBoolean(USE_OPTIONAL));
         }
 
         if (additionalProperties.containsKey(TARGET_OPENFEIGN)) {
-            this.setOpenFeign(convertPropertyToBoolean(TARGET_OPENFEIGN));
+            setOpenFeign(convertPropertyToBoolean(TARGET_OPENFEIGN));
         }
 
         if (additionalProperties.containsKey(DEFAULT_INTERFACES)) {
-            this.setDefaultInterfaces(Boolean.valueOf(additionalProperties.get(DEFAULT_INTERFACES).toString()));
+            setDefaultInterfaces(Boolean.valueOf(additionalProperties.get(DEFAULT_INTERFACES).toString()));
         }
-        additionalProperties.put(DEFAULT_INTERFACES, this.defaultInterfaces);
+        additionalProperties.put(DEFAULT_INTERFACES, defaultInterfaces);
 
         if (additionalProperties.containsKey(SPRING_BOOT_VERSION)) {
-            this.springBootVersion = additionalProperties.get(SPRING_BOOT_VERSION).toString();
+            springBootVersion = additionalProperties.get(SPRING_BOOT_VERSION).toString();
         }
-        additionalProperties.put(SPRING_BOOT_VERSION, this.springBootVersion);
+        additionalProperties.put(SPRING_BOOT_VERSION, springBootVersion);
         if (springBootVersion.startsWith("2")) {
             additionalProperties.put(SPRING_BOOT_VERSION_2, true);
-            this.setOpenFeign(true);
+            setOpenFeign(true);
         }
 
         if (useBeanValidation) {
@@ -269,11 +338,11 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         }
 
         if (additionalProperties.containsKey(IMPLICIT_HEADERS)) {
-            this.setImplicitHeaders(Boolean.valueOf(additionalProperties.get(IMPLICIT_HEADERS).toString()));
+            setImplicitHeaders(Boolean.valueOf(additionalProperties.get(IMPLICIT_HEADERS).toString()));
         }
 
         if (additionalProperties.containsKey(SWAGGER_DOCKET_CONFIG)) {
-            this.setSwaggerDocketConfig(Boolean.valueOf(additionalProperties.get(SWAGGER_DOCKET_CONFIG).toString()));
+            setSwaggerDocketConfig(Boolean.valueOf(additionalProperties.get(SWAGGER_DOCKET_CONFIG).toString()));
         }
 
         typeMapping.put("file", "Resource");
@@ -284,136 +353,156 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             writePropertyBack(USE_OPTIONAL, useOptional);
         }
 
-        if (this.interfaceOnly && this.delegatePattern) {
-            if (this.java8) {
-                this.delegateMethod = true;
+        if (interfaceOnly && delegatePattern) {
+            if (java8) {
+                delegateMethod = true;
                 additionalProperties.put("delegate-method", true);
             } else {
                 throw new IllegalArgumentException(
-                        String.format("Can not generate code with `%s` and `%s` true while `%s` is false.",
-                                DELEGATE_PATTERN, INTERFACE_ONLY, JAVA8_MODE));
+                    String.format("Can not generate code with `%s` and `%s` true while `%s` is false.",
+                        DELEGATE_PATTERN, INTERFACE_ONLY, JAVA8_MODE));
             }
         }
 
         supportingFiles.add(new SupportingFile("pom.mustache", "", "pom.xml"));
         supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
 
-        if (!this.interfaceOnly) {
+        if (!interfaceOnly) {
 
             if (isDefaultLibrary()) {
                 apiTestTemplateFiles.clear();
                 supportingFiles.add(new SupportingFile("homeController.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "HomeController.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "HomeController.java"));
                 supportingFiles.add(new SupportingFile("swagger2SpringBoot.mustache",
-                        (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "Swagger2SpringBoot.java"));
+                    (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator),
+                    "Swagger2SpringBoot.java"));
                 supportingFiles.add(new SupportingFile("RFC3339DateFormat.mustache",
-                        (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "RFC3339DateFormat.java"));
+                    (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator),
+                    "RFC3339DateFormat.java"));
                 supportingFiles.add(new SupportingFile("swaggerUiConfiguration.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "SwaggerUiConfiguration.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "SwaggerUiConfiguration.java"));
                 supportingFiles.add(new SupportingFile("application.mustache",
-                        ("src.main.resources").replace(".", java.io.File.separator), "application.properties"));
+                    "src.main.resources".replace(".", java.io.File.separator), "application.properties"));
             }
             if (isSpringMvcLibrary()) {
                 forceOas2();
                 supportingFiles.add(new SupportingFile("webApplication.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "WebApplication.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "WebApplication.java"));
                 supportingFiles.add(new SupportingFile("webMvcConfiguration.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "WebMvcConfiguration.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "WebMvcConfiguration.java"));
                 supportingFiles.add(new SupportingFile("swaggerUiConfiguration.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "SwaggerUiConfiguration.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "SwaggerUiConfiguration.java"));
                 supportingFiles.add(new SupportingFile("RFC3339DateFormat.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "RFC3339DateFormat.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "RFC3339DateFormat.java"));
                 supportingFiles.add(new SupportingFile("application.properties.mustache",
-                        ("src.main.resources").replace(".", java.io.File.separator), "swagger.properties"));
+                    "src.main.resources".replace(".", java.io.File.separator), "swagger.properties"));
             }
             if (isSpringCloudLibrary()) {
                 forceOas2();
                 supportingFiles.add(new SupportingFile("apiKeyRequestInterceptor.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "ApiKeyRequestInterceptor.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "ApiKeyRequestInterceptor.java"));
                 supportingFiles.add(new SupportingFile("clientConfiguration.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "ClientConfiguration.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "ClientConfiguration.java"));
                 apiTemplateFiles.put("apiClient.mustache", "Client.java");
                 if (!additionalProperties.containsKey(SINGLE_CONTENT_TYPES)) {
                     additionalProperties.put(SINGLE_CONTENT_TYPES, "true");
-                    this.setSingleContentTypes(true);
+                    setSingleContentTypes(true);
                 }
                 if (additionalProperties.containsKey(CodegenConstants.GENERATE_API_TESTS)) {
                     if (Boolean.valueOf(additionalProperties.get(CodegenConstants.GENERATE_API_TESTS).toString())) {
                         // TODO Api Tests are not currently supported in spring-cloud template
                         apiTestTemplateFiles.clear();
                         supportingFiles.add(new SupportingFile("application-test.mustache",
-                            ("src.test.resources").replace(".", java.io.File.separator), "application.yml"));
+                            "src.test.resources".replace(".", java.io.File.separator), "application.yml"));
                         supportingFiles.add(new SupportingFile("TestUtils.mustache",
-                            (testFolder + File.separator + basePackage).replace(".", java.io.File.separator), "TestUtils.java"));
+                            (testFolder + File.separator + basePackage).replace(".", java.io.File.separator),
+                            "TestUtils.java"));
                         supportingFiles.add(new SupportingFile("Application.mustache",
-                            (testFolder + File.separator + basePackage).replace(".", java.io.File.separator), "Application.java"));
+                            (testFolder + File.separator + basePackage).replace(".", java.io.File.separator),
+                            "Application.java"));
 
                     }
                 }
             } else {
                 apiTemplateFiles.put("apiController.mustache", "Controller.java");
                 supportingFiles.add(new SupportingFile("apiException.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiException.java"));
+                    (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator),
+                    "ApiException.java"));
                 supportingFiles.add(new SupportingFile("apiResponseMessage.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiResponseMessage.java"));
+                    (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator),
+                    "ApiResponseMessage.java"));
                 supportingFiles.add(new SupportingFile("notFoundException.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "NotFoundException.java"));
+                    (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator),
+                    "NotFoundException.java"));
                 supportingFiles.add(new SupportingFile("apiOriginFilter.mustache",
-                        (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator), "ApiOriginFilter.java"));
+                    (sourceFolder + File.separator + apiPackage).replace(".", java.io.File.separator),
+                    "ApiOriginFilter.java"));
                 supportingFiles.add(new SupportingFile("swaggerDocumentationConfig.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "SwaggerDocumentationConfig.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "SwaggerDocumentationConfig.java"));
             }
-        } else if ( this.swaggerDocketConfig && !isSpringCloudLibrary()) {
+        } else if (swaggerDocketConfig && !isSpringCloudLibrary()) {
             supportingFiles.add(new SupportingFile("swaggerDocumentationConfig.mustache",
-                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "SwaggerDocumentationConfig.java"));
+                (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                "SwaggerDocumentationConfig.java"));
         }
 
-        if (this.interfaceOnly) {
+        if (interfaceOnly) {
             apiTestTemplateFiles.clear();
         }
         if ("threetenbp".equals(dateLibrary)) {
             supportingFiles.add(new SupportingFile("customInstantDeserializer.mustache",
-                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "CustomInstantDeserializer.java"));
+                (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                "CustomInstantDeserializer.java"));
             if (isDefaultLibrary() || isSpringCloudLibrary()) {
                 supportingFiles.add(new SupportingFile("jacksonConfiguration.mustache",
-                        (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator), "JacksonConfiguration.java"));
+                    (sourceFolder + File.separator + configPackage).replace(".", java.io.File.separator),
+                    "JacksonConfiguration.java"));
             }
         }
 
-        if ((!this.delegatePattern && this.java8) || this.delegateMethod) {
+        if (!delegatePattern && java8 || delegateMethod) {
             additionalProperties.put("jdk8-no-delegate", true);
         }
 
-
-        if (this.delegatePattern && !this.delegateMethod) {
+        if (delegatePattern && !delegateMethod) {
             additionalProperties.put("isDelegate", "true");
             apiTemplateFiles.put("apiDelegate.mustache", "Delegate.java");
         }
 
-        if (this.java8) {
-            if (this.async) {
+        if (java8) {
+            if (async) {
                 additionalProperties.put(RESPONSE_WRAPPER, "CompletableFuture");
             }
-        } else if (this.async) {
+        } else if (async) {
             additionalProperties.put(RESPONSE_WRAPPER, "Callable");
         }
 
-        if(this.openFeign){
+        if (openFeign) {
             additionalProperties.put("isOpenFeign", true);
         }
 
         // Some well-known Spring or Spring-Cloud response wrappers
-        switch (this.responseWrapper) {
+        switch (responseWrapper) {
             case "Future":
             case "Callable":
             case "CompletableFuture":
-                additionalProperties.put(RESPONSE_WRAPPER, "java.util.concurrent" + this.responseWrapper);
+                additionalProperties.put(RESPONSE_WRAPPER, "java.util.concurrent" + responseWrapper);
                 break;
             case "ListenableFuture":
                 additionalProperties.put(RESPONSE_WRAPPER, "org.springframework.util.concurrent.ListenableFuture");
                 break;
             case "DeferredResult":
-                additionalProperties.put(RESPONSE_WRAPPER, "org.springframework.web.context.request.async.DeferredResult");
+                additionalProperties.put(RESPONSE_WRAPPER,
+                    "org.springframework.web.context.request.async.DeferredResult");
                 break;
             case "HystrixCommand":
                 additionalProperties.put(RESPONSE_WRAPPER, "com.netflix.hystrix.HystrixCommand");
@@ -429,27 +518,20 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         }
 
         // add lambda for mustache templates
-        additionalProperties.put("lambdaEscapeDoubleQuote", new Mustache.Lambda() {
-            @Override
-            public void execute(Template.Fragment fragment, Writer writer) throws IOException {
-                writer.write(fragment.execute().replaceAll("\"", Matcher.quoteReplacement("\\\"")));
-            }
-        });
-        additionalProperties.put("lambdaRemoveLineBreak", new Mustache.Lambda() {
-            @Override
-            public void execute(Template.Fragment fragment, Writer writer) throws IOException {
-                writer.write(fragment.execute().replaceAll("\\r|\\n", ""));
-            }
-        });
+        additionalProperties.put("lambdaEscapeDoubleQuote", (Lambda) (fragment, writer) -> writer
+            .write(fragment.execute().replaceAll("\"", Matcher.quoteReplacement("\\\""))));
+        additionalProperties.put("lambdaRemoveLineBreak",
+            (Lambda) (fragment, writer) -> writer.write(fragment.execute().replaceAll("\\r|\\n", "")));
 
-        if ((this.java8 && !this.defaultInterfaces) || !this.java8) {
+        if (java8 && !defaultInterfaces || !java8) {
             additionalProperties.put("fullController", true);
         }
     }
 
     @Override
-    public void addOperationToGroup(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
-        if((isDefaultLibrary() || isSpringMvcLibrary()) && !useTags) {
+    public void addOperationToGroup(String tag, String resourcePath, Operation operation, CodegenOperation co,
+        Map<String, List<CodegenOperation>> operations) {
+        if ((isDefaultLibrary() || isSpringMvcLibrary()) && !useTags) {
             String basePath = resourcePath;
             if (basePath.startsWith("/")) {
                 basePath = basePath.substring(1);
@@ -466,7 +548,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             }
             List<CodegenOperation> opList = operations.get(basePath);
             if (opList == null) {
-                opList = new ArrayList<CodegenOperation>();
+                opList = new ArrayList<>();
                 operations.put(basePath, opList);
             }
             opList.add(co);
@@ -482,15 +564,10 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     }
 
     @Override
-    public String getDefaultTemplateDir() {
-        return "JavaSpring";
-    }
-
-    @Override
     public void preprocessOpenAPI(OpenAPI openAPI) {
         super.preprocessOpenAPI(openAPI);
 
-        if(!additionalProperties.containsKey(TITLE)) {
+        if (!additionalProperties.containsKey(TITLE)) {
             // From the title, compute a reasonable name for the package and the API
             String title = openAPI.getInfo().getTitle();
 
@@ -512,7 +589,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             port = String.valueOf(urlInfo.getPort());
         }
 
-        this.additionalProperties.put("serverPort", port);
+        additionalProperties.put("serverPort", port);
         if (openAPI.getPaths() != null) {
             for (String pathname : openAPI.getPaths().keySet()) {
                 PathItem pathItem = openAPI.getPaths().get(pathname);
@@ -542,6 +619,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+        super.postProcessOperations(objs);
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         if (operations != null) {
             List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
@@ -583,19 +661,16 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
                     }
                 });
 
-                if(implicitHeaders){
+                if (implicitHeaders) {
                     removeHeadersFromAllParams(operation.allParams);
                     removeHeadersFromContents(operation.contents);
                 }
-                if (operation.examples != null){
-                    for (Map<String, String> example : operation.examples)
-                    {
-                        for (Map.Entry<String, String> entry : example.entrySet())
-                        {
+                if (operation.examples != null) {
+                    for (Map<String, String> example : operation.examples) {
+                        for (Map.Entry<String, String> entry : example.entrySet()) {
                             // Replace " with \", \r, \n with \\r, \\n
-                            String val = entry.getValue().replace("\"", "\\\"")
-                                .replace("\r","\\r")
-                                .replace("\n","\\n");
+                            String val = entry.getValue().replace("\"", "\\\"").replace("\r", "\\r").replace("\n",
+                                "\\n");
                             entry.setValue(val);
                         }
                     }
@@ -618,18 +693,20 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
     private interface DataTypeAssigner {
         void setReturnType(String returnType);
+
         void setReturnContainer(String returnContainer);
     }
 
     /**
-     *
      * @param returnType The return type that needs to be converted
-     * @param dataTypeAssigner An object that will assign the data to the respective fields in the model.
+     * @param dataTypeAssigner An object that will assign the data to the respective fields in the
+     *        model.
      */
-    private void doDataTypeAssignment(String returnType, SpringCodegen.DataTypeAssigner dataTypeAssigner) {
+    private void doDataTypeAssignment(String returnType, DataTypeAssigner dataTypeAssigner) {
         final String rt = returnType;
         if (rt == null) {
-            dataTypeAssigner.setReturnType("Void");
+            // spring mvc 不需要Void
+            // dataTypeAssigner.setReturnType("Void");
         } else if (rt.startsWith("List")) {
             int end = rt.lastIndexOf(">");
             if (end > 0) {
@@ -657,39 +734,47 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     /**
      * This method removes header parameters from the list of parameters and also
      * corrects last allParams hasMore state.
+     *
      * @param allParams list of all parameters
      */
     private void removeHeadersFromAllParams(List<CodegenParameter> allParams) {
-        if(allParams.isEmpty()){
+        if (allParams.isEmpty()) {
             return;
         }
         final ArrayList<CodegenParameter> copy = new ArrayList<>(allParams);
         allParams.clear();
 
-        for(CodegenParameter p : copy){
-            if(!getBooleanValue(p, CodegenConstants.IS_HEADER_PARAM_EXT_NAME)){
+        for (CodegenParameter p : copy) {
+            if (!getBooleanValue(p, CodegenConstants.IS_HEADER_PARAM_EXT_NAME)) {
                 allParams.add(p);
             }
         }
-        allParams.get(allParams.size()-1).getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.FALSE);
+        if (!allParams.isEmpty()) {
+            allParams.get(allParams.size() - 1).getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME,
+                Boolean.FALSE);
+        }
     }
 
     private void removeHeadersFromContents(List<CodegenContent> contents) {
-        if(contents == null || contents.isEmpty()){
+        if (contents == null || contents.isEmpty()) {
             return;
         }
-        for(int index = 0; index < contents.size(); index++) {
+        for (int index = 0; index < contents.size(); index++) {
             final CodegenContent codegenContent = contents.get(index);
             final List<CodegenParameter> parameters = codegenContent.getParameters();
             if (parameters == null || parameters.isEmpty()) {
                 continue;
             }
             final List<CodegenParameter> filteredParameters = parameters.stream()
-                    .filter(codegenParameter -> !getBooleanValue(codegenParameter, CodegenConstants.IS_HEADER_PARAM_EXT_NAME))
-                    .collect(Collectors.toList());
+                .filter(
+                    codegenParameter -> !getBooleanValue(codegenParameter, CodegenConstants.IS_HEADER_PARAM_EXT_NAME))
+                .collect(Collectors.toList());
             parameters.clear();
             parameters.addAll(filteredParameters);
-            parameters.get(parameters.size()-1).getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.FALSE);
+            if (!parameters.isEmpty()) {
+                parameters.get(parameters.size() - 1).getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME,
+                    Boolean.FALSE);
+            }
         }
     }
 
@@ -765,38 +850,51 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             if (example == null) {
                 example = "/path/to/file";
             }
-            example = "new org.springframework.core.io.FileSystemResource(new java.io.File(\"" + escapeText(example) + "\"))";
+            example = "new org.springframework.core.io.FileSystemResource(new java.io.File(\"" + escapeText(example)
+                + "\"))";
             p.example = example;
         } else {
             super.setParameterExampleValue(p);
         }
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public void setConfigPackage(String configPackage) {
         this.configPackage = configPackage;
     }
 
     public void setBasePackage(String configPackage) {
-        this.basePackage = configPackage;
+        basePackage = configPackage;
     }
 
-    public void setInterfaceOnly(boolean interfaceOnly) { this.interfaceOnly = interfaceOnly; }
+    public void setInterfaceOnly(boolean interfaceOnly) {
+        this.interfaceOnly = interfaceOnly;
+    }
 
-    public void setDelegatePattern(boolean delegatePattern) { this.delegatePattern = delegatePattern; }
+    public void setDelegatePattern(boolean delegatePattern) {
+        this.delegatePattern = delegatePattern;
+    }
 
     public void setSingleContentTypes(boolean singleContentTypes) {
         this.singleContentTypes = singleContentTypes;
     }
 
-    public void setJava8(boolean java8) { this.java8 = java8; }
+    public void setJava8(boolean java8) {
+        this.java8 = java8;
+    }
 
-    public void setAsync(boolean async) { this.async = async; }
+    public void setAsync(boolean async) {
+        this.async = async;
+    }
 
-    public void setResponseWrapper(String responseWrapper) { this.responseWrapper = responseWrapper; }
+    public void setResponseWrapper(String responseWrapper) {
+        this.responseWrapper = responseWrapper;
+    }
 
     public void setUseTags(boolean useTags) {
         this.useTags = useTags;
@@ -838,12 +936,12 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
     public Map<String, Object> postProcessAllModels(Map<String, Object> objs) {
         Map<String, Object> allProcessedModels = super.postProcessAllModels(objs);
 
-        List<Object> allModels = new ArrayList<Object>();
-        for (String name: allProcessedModels.keySet()) {
-            Map<String, Object> models = (Map<String, Object>)allProcessedModels.get(name);
+        List<Object> allModels = new ArrayList<>();
+        for (String name : allProcessedModels.keySet()) {
+            Map<String, Object> models = (Map<String, Object>) allProcessedModels.get(name);
             try {
                 allModels.add(((List<Object>) models.get("models")).get(0));
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -857,9 +955,9 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         Map<CodegenModel, List<CodegenModel>> byParent = new LinkedHashMap<>();
         for (Object model : allModels) {
             Map entry = (Map) model;
-            CodegenModel parent = ((CodegenModel)entry.get("model")).parentModel;
-            if(null!= parent) {
-                byParent.computeIfAbsent(parent, k -> new LinkedList<>()).add((CodegenModel)entry.get("model"));
+            CodegenModel parent = ((CodegenModel) entry.get("model")).parentModel;
+            if (null != parent) {
+                byParent.computeIfAbsent(parent, k -> new LinkedList<>()).add((CodegenModel) entry.get("model"));
             }
         }
 
@@ -878,8 +976,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             }
             parent.put("children", childrenList);
             parent.put("discriminator", parentModel.discriminator);
-            if(parentModel.discriminator != null && parentModel.discriminator.getMapping() != null)
-            {
+            if (parentModel.discriminator != null && parentModel.discriminator.getMapping() != null) {
                 parentModel.discriminator.getMapping().replaceAll((key, value) -> OpenAPIUtil.getSimpleRef(value));
             }
             parentsList.add(parent);
@@ -893,7 +990,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         objs = super.postProcessModelsEnum(objs);
 
         //Add imports for Jackson
-        List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
+        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
         List<Object> models = (List<Object>) objs.get("models");
         for (Object _mo : models) {
             Map<String, Object> mo = (Map<String, Object>) _mo;
@@ -902,7 +999,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
             boolean isEnum = getBooleanValue(cm, IS_ENUM_EXT_NAME);
             if (Boolean.TRUE.equals(isEnum) && cm.allowableValues != null) {
                 cm.imports.add(importMapping.get("JsonValue"));
-                Map<String, String> item = new HashMap<String, String>();
+                Map<String, String> item = new HashMap<>();
                 item.put("import", importMapping.get("JsonValue"));
                 imports.add(item);
             }
@@ -911,6 +1008,7 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
         return objs;
     }
 
+    @Override
     public void setUseBeanValidation(boolean useBeanValidation) {
         this.useBeanValidation = useBeanValidation;
     }
@@ -930,5 +1028,15 @@ public class SpringCodegen extends AbstractJavaCodegen implements BeanValidation
 
     public void setThrowsException(boolean throwsException) {
         this.throwsException = throwsException;
+    }
+
+    @Override
+    public CodegenType getTag() {
+        return CodegenType.SERVER;
+    }
+
+    @Override
+    public String getDefaultTemplateDir() {
+        return "v3/easyapi-spring";
     }
 }

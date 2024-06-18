@@ -30,8 +30,8 @@ dependencies {
     api ffcommon
 //    api group: 'io.swagger', name: 'swagger-codegen', version: '2.2.2'
     //api group: 'io.swagger.codegen.v3', name: 'swagger-codegen', version: '3.0.20'
-    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.23'
-    //api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.50'
+    //api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.23'
+    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.50'
 
 
     api 'com.fasterxml.jackson.core:jackson-databind:2.14.0'

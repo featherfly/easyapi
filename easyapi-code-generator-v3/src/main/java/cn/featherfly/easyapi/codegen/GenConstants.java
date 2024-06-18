@@ -1,4 +1,4 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

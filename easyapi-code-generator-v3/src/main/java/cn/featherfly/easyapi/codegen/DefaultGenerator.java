@@ -1,11 +1,6 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -22,24 +17,16 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import io.swagger.codegen.v3.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.swagger.codegen.v3.AbstractGenerator;
-import io.swagger.codegen.v3.ClientOptInput;
-import io.swagger.codegen.v3.CodegenArgument;
-import io.swagger.codegen.v3.CodegenConfig;
-import io.swagger.codegen.v3.CodegenConstants;
-import io.swagger.codegen.v3.CodegenModel;
-import io.swagger.codegen.v3.CodegenOperation;
-import io.swagger.codegen.v3.CodegenSecurity;
-import io.swagger.codegen.v3.Generator;
-import io.swagger.codegen.v3.GlobalSupportingFile;
-import io.swagger.codegen.v3.ISchemaHandler;
-import io.swagger.codegen.v3.SupportingFile;
 import io.swagger.codegen.v3.ignore.CodegenIgnoreProcessor;
 import io.swagger.codegen.v3.templates.TemplateEngine;
 import io.swagger.codegen.v3.utils.ImplementationVersion;
@@ -850,6 +837,49 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
         generateSupportingFiles(files, bundle);
         config.processOpenAPI(openAPI);
         return files;
+    }
+
+    @Override
+    public Map<String, Object> generateBundle() {
+
+        if (openAPI == null) {
+            throw new RuntimeException("missing OpenAPI input!");
+        }
+        if (config == null) {
+            throw new RuntimeException("missing configuration input!");
+        }
+        configureGeneratorProperties();
+        configureSwaggerInfo();
+
+        List<File> files = new ArrayList<>();
+        // models
+        List<Object> allModels = new ArrayList<>();
+        generateModels(files, allModels);
+        // apis
+        List<Object> allOperations = new ArrayList<>();
+        generateApis(files, allOperations, allModels);
+
+        // supporting files
+        Map<String, Object> bundle = buildSupportFileBundle(allOperations, allModels);
+        Json.prettyPrint(bundle);
+        generateSupportingFiles(files, bundle);
+        config.processOpenAPI(openAPI);
+        return bundle;
+    }
+
+    @Override
+    public String renderTemplate(String template, String context) {
+        try {
+            Map<String, Object> bundle = new ObjectMapper().readValue(context, Map.class);
+            Handlebars handlebars = new Handlebars();
+            Template hTemplate = handlebars.compileInline(template);
+            return hTemplate.apply(bundle);
+        } catch (IOException e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            return "Error rendering template: " + e.getMessage() + "\n" + sw.toString();
+        }
     }
 
     private File processTemplateToFile(Map<String, Object> templateData, String templateName, String outputFilename)

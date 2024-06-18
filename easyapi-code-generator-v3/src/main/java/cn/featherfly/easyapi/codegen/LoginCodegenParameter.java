@@ -1,6 +1,4 @@
-package cn.featherfly.easyapi;
-
-import cn.featherfly.easyapi.ExtCodegenParameter;
+package cn.featherfly.easyapi.codegen;
 
 /**
  * The type LoginCodegenParameter.

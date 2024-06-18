@@ -1,6 +1,6 @@
-package cn.featherfly.easyapi.v3.springmvc;
+package cn.featherfly.easyapi.codegen.v3.spring;
 
-import cn.featherfly.easyapi.WrapResponseAbility;
+import cn.featherfly.easyapi.codegen.WrapResponseAbility;
 
 public class SpringCloundClientCodegen extends SpringCloundCodegen implements WrapResponseAbility {
 

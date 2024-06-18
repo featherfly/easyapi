@@ -1,4 +1,4 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
 import java.io.IOException;
 import java.io.Writer;

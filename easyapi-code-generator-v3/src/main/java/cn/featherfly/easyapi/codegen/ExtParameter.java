@@ -1,6 +1,7 @@
-package cn.featherfly.easyapi;
+package cn.featherfly.easyapi.codegen;
 
 
+import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenParameter;
 
 /**
@@ -32,10 +33,17 @@ public class ExtParameter {
      */
     public ExtParameter(String name, CodegenParameter codegenParameter, String paramTypeImport, String paramTypeDefined, String paramName) {
         this.name = name;
-        this.codegenParameter = codegenParameter;
         this.paramTypeImport = paramTypeImport;
         this.paramTypeDefined = paramTypeDefined;
         this.paramName = paramName;
+
+        codegenParameter.paramName = paramName;
+        codegenParameter.baseName = paramName;
+        codegenParameter.baseType = paramTypeDefined;
+        codegenParameter.dataType = paramTypeImport;
+        codegenParameter.vendorExtensions.put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.TRUE);
+        this.codegenParameter = codegenParameter;
+
     }
 
     /**

@@ -1,0 +1,18 @@
+{
+  "modelPackage":"cn.featherfly.easyapi.web.{module}.api.v1.{secondModule}.dto",
+  "invokerPackage": "cn.featherfly.easyapi.web.{module}.api.v1.{secondModule}.invoker",
+  "apiPackage":"cn.featherfly.easyapi.web.{module}.api.v1.{secondModule}",
+  "groupId":"cn.featherfly.jbox",
+  "artifactId":"admin",
+  "artifactVersion":"1.2.0",
+  "title": "user-account-service",
+  "jakarta": true,
+  "java8": true,
+  "delegatePattern": true,
+  "dateLibrary": "java8-localdatetime",
+  "defaultInterfaces": false,
+  "validationMode": "legacy",
+  "useBeanValidation": true,
+  "library": "spring-boot3",
+  "springBoot3Version": "3.4.2"
+}

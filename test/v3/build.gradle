@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    apply from: rootDir.getAbsolutePath() +  '/java_base.gradle'   
+    apply from: rootDir.getAbsolutePath() +  '/maven_push.gradle'
+    
+    ext {
+        ffcommon = "cn.featherfly.common:common-core:1.16.0"
+    }   
+
+    dependencies {
+        api group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+        //api group: 'cn.featherfly.common', name: 'common-api', version: '0.2.4'
+        //api group: 'cn.featherfly.common', name: 'common-core', version: '1.8.19'
+
+//        testImplementation 'cn.featherfly.easyapi:easyapi-code-generator-v3:0.1.0-SNAPSHOT'
+//        testImplementation 'org.openapitools:jackson-databind-nullable:0.2.8'
+
+        testImplementation group: 'org.testng', name: 'testng', version: '7.12.0'
+        testImplementation group: 'com.google.inject', name: 'guice', version: '7.0.0'
+        testImplementation 'org.slf4j:slf4j-log4j12:1.7.30'
+        testImplementation 'log4j:log4j:1.2.17'
+    }
+}
+
+
+dependencies {
+    implementation 'org.slf4j:slf4j-log4j12:1.7.30'
+    implementation 'log4j:log4j:1.2.17'
+    //implementation group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
+    //implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.9'
+//
+//    implementation ffcommon
+//    implementation 'cn.featherfly.common:common-functional:0.3.0'
+////    api swagger
+//    implementation 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.59'
+//    // swagger command line
+////    api 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.76'
+//
+////    // swagger web ui
+////    // implementation 'io.swagger.codegen.v3:swagger-generator:3.0.76'
+////
+////    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.0'
+////    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+////
+////    implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
+//    //implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.8'
+
+    // code generate denpendencies
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.0'
+    testImplementation 'jakarta.validation:jakarta.validation-api:4.0.0-M1'
+    testImplementation 'com.fasterxml.jackson.core:jackson-annotations:2.21'
+
+////    compileOnly 'org.openapitools:openapi-generator-cli:7.19.0'
+}

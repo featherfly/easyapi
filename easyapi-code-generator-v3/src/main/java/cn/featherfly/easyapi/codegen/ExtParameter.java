@@ -32,6 +32,21 @@ public class ExtParameter {
      * @param paramName        the param name
      */
     public ExtParameter(String name, CodegenParameter codegenParameter, String paramTypeImport, String paramTypeDefined, String paramName) {
+        this(name,codegenParameter, paramTypeImport, paramTypeDefined,paramName, null);
+    }
+
+    /**
+     * Instantiates a new Ext parameter.
+     *
+     * @param name             the name
+     * @param codegenParameter the codegen parameter
+     * @param paramTypeImport  the param type import
+     * @param paramTypeDefined the param type defined
+     * @param paramName        the param name
+     * @param description      the description
+     */
+    public ExtParameter(String name, CodegenParameter codegenParameter, String paramTypeImport,
+                        String paramTypeDefined, String paramName,String description) {
         this.name = name;
         this.paramTypeImport = paramTypeImport;
         this.paramTypeDefined = paramTypeDefined;
@@ -41,6 +56,7 @@ public class ExtParameter {
         codegenParameter.baseName = paramName;
         codegenParameter.baseType = paramTypeDefined;
         codegenParameter.dataType = paramTypeImport;
+        codegenParameter.description = description;
         codegenParameter.vendorExtensions.put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.TRUE);
         this.codegenParameter = codegenParameter;
 

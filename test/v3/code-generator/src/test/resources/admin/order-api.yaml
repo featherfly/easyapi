@@ -1,0 +1,264 @@
+openapi: 3.0.2
+info:
+  title: 瞄零食定义 - 订单接口定义
+  description: >
+    瞄零食定义 - 订单接口定义
+  termsOfService: http://jwzz.cdzkdc.com/terms/
+  contact:
+    email: featherfly@foxmail.com
+  version: 1.0.0
+servers:
+  - url: https://jwzz.cdzkdc.com/api/v1/admin
+  - url: http://jwzz.cdzkdc.com/api/v1/admin
+tags:
+  - name: order
+    description: 交易订单
+  - name: orderGoods
+    description: 订单商品
+# basePath: /api/v1/admin
+paths:
+  /order:
+    get:
+      tags:
+        - order
+      summary: 获取订单列表接口
+      description: 获取订单列表
+        @Pagination
+      operationId: list
+      parameters:
+        - in: query
+          name: shelfId
+          schema:
+            type: integer
+            format: int64
+          description: 货柜ID
+          required: false
+        - in: query
+          name: time
+          schema:
+            type: string
+          description: 时间
+          required: false
+        - in: query
+          name: status
+          schema:
+            type: integer
+            format: int32
+          description: 状态
+          required: false
+        - in: query
+          name: processGoodsStatus
+          schema:
+            type: boolean
+          description: 货品处理状态
+          required: false
+        - in: query
+          name: fetchGoods
+          schema:
+            type: boolean
+          description: 是否包含商品信息，默认不获取
+          required: false
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagingOrderDto'
+  /order/{orderId}/check:
+      put:
+        tags:
+          - order
+        summary: 检查订单
+        description: 检查订单，如果支付平台订单与本地订单状态不同则同步
+        operationId: check
+        parameters:
+          - in: path
+            name: orderId
+            schema:
+              type: integer
+              format: int64
+            description: 订单编号
+            required: true
+        responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '../models.yaml#/components/schemas/ResultDto'
+  /order/goods/{orderId}:
+    get:
+      tags:
+        - orderGoods
+      summary: 获取订单商品接口
+      description: 获取订单商品接口
+      operationId: getOrderGoods
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: integer
+            format: int64
+          description: 订单ID
+          required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagingOrderGoodsDto'
+  /order/handle:
+      put:
+        tags:
+          - order
+        summary: 检查订单
+        description: 检查订单 未处理，如果支付平台订单与本地订单状态不同则同步
+        operationId: handle
+        parameters:
+          - in: query
+            name: orderNo
+            schema:
+              type: string
+            description: 订单编号
+            required: true
+        responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '../models.yaml#/components/schemas/ResultDto'
+components:
+  schemas:
+    PagingOrderDto:
+      properties:
+        total:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDto'
+    PagingOrderGoodsDto:
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderGoodsDto'
+    OrderGoodsDto:
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 主键
+        goodsCount:
+          type: integer
+          format: int64
+          description: 数量
+        goodsPrice:
+          type: number
+          format: float
+          description: 金额
+        goodsName:
+          type: string
+          description: 名称
+        goodsFlavor:
+          type: string
+          description: 味道
+        goodsSpec:
+          type: string
+          description: 规格
+        amount:
+          type: number
+          format: float
+          description: 订单金额
+        payment:
+          type: number
+          format: float
+          description: 实际支付金额
+    OrderDto:
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 主键
+        orderNo:
+          type: string
+          description: 订单号
+        status:
+          type: integer
+          format: int32
+          description: 状态
+        processGoodsStatus:
+          type: boolean
+          description: 商品处理状态
+        title:
+          type: string
+          description: 标题
+        descp:
+          type: string
+          description: 描述
+        userId:
+          type: integer
+          format: int64
+          description: 用户ID
+        organizationId:
+          type: integer
+          format: int64
+          description: 公司ID
+        shelfId:
+          type: integer
+          format: int64
+          description: 货柜ID
+        amount:
+          type: number
+          format: float
+          description: 订单金额
+        payment:
+          type: number
+          format: float
+          description: 实际支付金额
+        paymentPlatform:
+          type: integer
+          format: int32
+          description: 支付类型
+        createTime:
+          type: string
+          description: 创建时间
+        latestPaymentTime:
+          type: string
+          description: 支付时间
+        finishTime:
+          type: string
+          description: 订单完成时间
+        expireTime:
+          type: string
+          description: 到期时间
+        orderType:
+          type: integer
+          format: int32
+          description: 订单类型
+        wxAppId:
+          type: string
+          description: 微信ID
+        wxTransactionId:
+          type: string
+        wxRefundId:
+          type: string
+        wxPrepayId:
+          type: string
+        wxPrepayIdExpireTime:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        goods:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderGoodsDto'

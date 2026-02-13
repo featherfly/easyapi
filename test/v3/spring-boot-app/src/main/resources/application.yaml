@@ -1,0 +1,67 @@
+debug: true
+logging:
+  config:  classpath:log4j2-dev.xml
+server:
+  port: 88 #服务端口
+  servlet:
+    session:
+      timeout: 30D
+spring:
+#  main:
+#    allow-circular-references: true
+#  devtools:
+#    restart:
+#      #设置开启热部署
+#      enabled: true
+#      #重启目录
+#      additional-paths:
+#        - src/main/java
+#        - src/main/java-api-v1
+#        - src/main/java-api-v1-gen
+#      additional-exclude:
+#        - WEB-INF/**
+#        - src/main/resources/**
+#      #      exclude: WEB-INF/**
+#      log-condition-evaluation-delta: true
+  application:
+    name: xxl-web-admin
+#  cloud:
+#    consul:
+#      # host: devconsulhost
+#      port: 8500
+#      discovery:
+#        instance-id: ${spring.application.name}:${server.port}
+#        tags: sfp
+#        # 注册到consul的服务名称
+#        serviceName: ${spring.application.name}
+#        hostname: ${spring.application.name}
+#        healthCheckPath: /actuator/health
+#        healthCheckInterval: 5s
+#        #是否注册本服务到注册中心
+#        register: true
+#        prefer-ip-address: true
+#        enabled: true
+#        #ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有端点 默认是info,health
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: cn.featherfly.easyapi
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

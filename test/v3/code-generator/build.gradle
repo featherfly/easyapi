@@ -1,0 +1,68 @@
+//plugins {
+//    id 'org.hidetake.swagger.generator' version '2.19.2'
+//}
+
+dependencies {
+    api ffcommon
+    api 'cn.featherfly.common:common-functional:0.3.0'
+//    api swagger
+    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.59'
+    // swagger command line
+//    api 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.76'
+
+//    // swagger web ui
+    // implementation 'io.swagger.codegen.v3:swagger-generator:3.0.76'
+//
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.0'
+//    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+//
+//    implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
+//    //implementation group: 'org.springframework', name: 'spring-webmvc', version: '6.1.8'
+//    //implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.3.0'
+
+//    compileOnly 'org.openapitools:openapi-generator-cli:7.19.0'
+
+    testImplementation 'cn.featherfly.easyapi:easyapi-code-generator-v3:0.1.0-SNAPSHOT'
+
+    testImplementation 'org.testng:testng:7.5.1'
+
+    // test code gen
+//    testImplementation 'org.springframework:spring-webmvc:7.0.3'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-web:4.0.2'
+    testImplementation 'javax.annotation:javax.annotation-api:1.3.2'
+//    testImplementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+    testImplementation 'tools.jackson.core:jackson-databind:3.0.4'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.21.0'
+//    testImplementation 'jakarta.validation:jakarta.validation-api:3.1.1'
+
+
+    // swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.41'             // Swagger Codegen V2
+    // swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.57'  // or Swagger Codegen V3
+    // swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'     // or OpenAPI Generator
+    // swaggerCodegen 'org.openapitools:openapi-generator-cli:7.6.0'     // or OpenAPI Generator
+}
+
+//configurations {
+//    compile.transitive = true
+//    //all*.exclude module: 'jbox-rbac'
+////    all*.exclude module: 'pull-parser'
+//}
+
+//configurations.all {
+//    resolutionStrategy {
+//        // force certain versions of dependencies (including transitive)
+//        //  *append new forced modules:
+//        force swagger
+//        //  *replace existing forced modules with new ones:
+//        forcedModules = [swagger]
+//    }
+//}
+
+//swaggerSources {
+//    order {
+//        inputFile = file('api/order-api.yaml')
+//        code {
+//            language = 'spring'
+//        }
+//    }
+//}

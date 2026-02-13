@@ -1,0 +1,130 @@
+swagger: '2.0'
+info:
+  description: 每获平台（V2.0）接口定义
+  version: '1.1'
+  title: 每获平台（V2.0）接口定义
+  contact:
+    name: foo@example.com
+  license:
+    name: license
+host: 'localhost:8081'
+basePath: /api_v2/admin
+paths:
+  /account/user/{userId}/flowoffunds:
+    get:
+      tags:
+        - acount
+      summary: 指定用户的资金流水
+      description: >
+        给指定用户充值
+        @LoginAdmin
+        @Pagination
+      operationId: findFlowOfFunds
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          description: 用户ID
+          required: true
+        - in: query
+          name: action
+          type: integer
+          format: int32
+          description: 流水动作
+          required: false
+        - in: query
+          name: type
+          type: integer
+          format: int32
+          description: 流水业务
+          required: false
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FlowOfFundsDtoPage'
+  /account/user/{userId}/deposit:
+    post:
+      tags:
+        - acount
+      summary: 给指定用户充值
+      description: >
+        给指定用户充值
+        @LoginAdmin
+      operationId: deposit
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+        - in: query
+          name: fund
+          type: integer
+          format: int64
+          minimum: 0
+          description: 充值金额（单位元，不能有小数）
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '../models.yaml#/ResultDto'
+    put:
+      tags:
+        - acount
+      summary: 给指定用户充值
+      description: >
+        给指定用户充值
+        @LoginAdmin
+      operationId: deposit2
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+        - in: query
+          name: fund
+          type: integer
+          format: int64
+          minimum: 0
+          description: 充值金额（单位元，不能有小数）
+          required: true
+      responses:
+        '200':
+          description: OK
+definitions:
+  FlowOfFundsDtoPage:
+    properties:
+      total:
+        type: integer
+        format: int32
+        description: 总数
+      pageNumber:
+        type: integer
+        format: int32
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/FlowOfFundsDto'
+  FlowOfFundsDto:
+    properties:
+      action:
+        type: integer
+        format: int32
+      actionText:
+        type: string
+      type:
+        type: integer
+        format: int32
+      typeText:
+        type: string
+      amount:
+        type: number
+      descp:
+        type: string
+      createTime:
+        type: string
+        format: date-time

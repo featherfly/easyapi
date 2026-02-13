@@ -1,12 +1,16 @@
 package cn.featherfly.easyapi.codegen;
 
 import static io.swagger.codegen.v3.CodegenConstants.IS_ENUM_EXT_NAME;
+import static io.swagger.codegen.v3.CodegenConstants.PACKAGE_AUTHORS;
 import static io.swagger.codegen.v3.generators.handlebars.ExtensionHelper.getBooleanValue;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import cn.featherfly.common.lang.Lang;
+import cn.featherfly.common.lang.Str;
+import io.swagger.codegen.v3.*;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import org.apache.commons.lang3.StringUtils;
@@ -15,12 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import cn.featherfly.common.bean.BeanUtils;
 import cn.featherfly.common.lang.Strings;
-import io.swagger.codegen.v3.CodegenConstants;
-import io.swagger.codegen.v3.CodegenModelFactory;
-import io.swagger.codegen.v3.CodegenModelType;
-import io.swagger.codegen.v3.CodegenOperation;
-import io.swagger.codegen.v3.CodegenParameter;
-import io.swagger.codegen.v3.CodegenProperty;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -72,6 +70,68 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
     }
 
     @Override
+    public CodegenOperation fromOperation(String path, String httpMethod, Operation operation,
+                                          Map<String, Schema> schemas, OpenAPI openAPI) {
+        CodegenOperation op = super.fromOperation(path, httpMethod, operation, schemas, openAPI);
+        if (!processServerParameter(op)) {
+            String notes = op.notes;
+            if (notes != null) {
+                List<CodegenParameter> codegenParameters = new ArrayList<>();
+                extParameters.forEach(extParameter -> {
+                    if (notes.contains(extParameter.getName())) {
+                        codegenParameters.add(extParameter.getCodegenParameter().copy());
+                    }
+                });
+                if (!codegenParameters.isEmpty()) {
+                    for (CodegenContent content : op.getContents()) {
+                        addParameters(content, codegenParameters);
+                    }
+                }
+            }
+        }
+        // process hasMore
+        for (CodegenContent content : op.getContents()) {
+            for (CodegenParameter parameter : content.getParameters()) {
+                parameter.vendorExtensions.put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.TRUE);
+            }
+            if (!content.getParameters().isEmpty()) {
+                content.getParameters().get(content.getParameters().size() - 1).vendorExtensions
+                        .put(CodegenConstants.HAS_MORE_EXT_NAME, Boolean.FALSE);
+            }
+        }
+        return op;
+    }
+
+    private boolean processServerParameter(CodegenOperation operation) {
+        if (!operation.getVendorExtensions().containsKey("x-server-parameters")) {
+            return false;
+        }
+
+        List<String> serverParameters = (List<String>) operation.getVendorExtensions().get("x-server-parameters");
+        if (Lang.isEmpty(serverParameters)) {
+            return false;
+        }
+
+        boolean result = false;
+
+        List<CodegenParameter> codegenParameters = new ArrayList<>();
+        for (String serverParameter : serverParameters) {
+            for (ExtParameter extParameter : extParameters) {
+                if (extParameter.getName().equals(serverParameter)) {
+                    codegenParameters.add(extParameter.getCodegenParameter().copy());
+                    result = true;
+                }
+            }
+        }
+        if (!codegenParameters.isEmpty()) {
+            for (CodegenContent content : operation.getContents()) {
+                addParameters(content, codegenParameters);
+            }
+        }
+        return result;
+    }
+
+    @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         @SuppressWarnings("unchecked")
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
@@ -87,23 +147,51 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
                         addExtParameterImports(objs, "cn.featherfly.common.structure.page.PaginationResults");
                     }
                 }
-                String notes = operation.notes;
-                if (notes != null) {
-                    extParameters.forEach(extParameter -> {
-                        if (notes.contains(extParameter.getName())) {
-                            addAddtionalParameter(extParameter.getCodegenParameter().copy(), operation,
-                                    extParameter.getParamTypeDefined(), extParameter.getParamName());
-                            addExtParameterImports(objs, extParameter.getParamTypeImport());
-                        }
-                    });
+                if (!processServerParameter(operation, objs)) {
+                    String notes = operation.notes;
+                    if (notes != null) {
+                        extParameters.forEach(extParameter -> {
+                            if (notes.contains(extParameter.getName())) {
+                                addAddtionalParameter(extParameter.getCodegenParameter().copy(), operation,
+                                        extParameter.getParamTypeDefined(), extParameter.getParamName());
+                                addExtParameterImports(objs, extParameter.getParamTypeImport());
+                            }
+                        });
+                    }
                 }
             }
         }
         return objs;
     }
 
+
+    private boolean processServerParameter(CodegenOperation operation, Map<String, Object> objs) {
+        if (!operation.getVendorExtensions().containsKey("x-server-parameters")) {
+            return false;
+        }
+
+        List<String> serverParameters = (List<String>) operation.getVendorExtensions().get("x-server-parameters");
+        if (Lang.isEmpty(serverParameters)) {
+            return false;
+        }
+
+        boolean result = false;
+        for (String serverParameter : serverParameters) {
+            for (ExtParameter extParameter : extParameters) {
+                if (extParameter.getName().equals(serverParameter)) {
+                    addAddtionalParameter(extParameter.getCodegenParameter().copy(), operation,
+                            extParameter.getParamTypeDefined(), extParameter.getParamName());
+                    addExtParameterImports(objs, extParameter.getParamTypeImport());
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+
     private void addAddtionalParameter(CodegenParameter params, CodegenOperation operation, String dataType,
-            String paramName) {
+                                       String paramName) {
         params.dataType = dataType;
         params.paramName = paramName;
         params.baseName = paramName;
@@ -149,12 +237,12 @@ public abstract class EasyapiAbstractJavaCodegen extends AbstractJavaCodegen
 
     @Override
     public String apiPackage() {
-        return Strings.format(super.apiPackage(), BeanUtils.toMap(this));
+        return Str.format(super.apiPackage(), BeanUtils.toMap(this));
     }
 
     @Override
     public String toModelImport(String name) {
-        return Strings.format(super.toModelImport(name), BeanUtils.toMap(this));
+        return Str.format(super.toModelImport(name), BeanUtils.toMap(this));
     }
 
     @Override

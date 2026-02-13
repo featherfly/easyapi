@@ -64,9 +64,16 @@ paths:
         - trade-order
       summary: 获取个人订单
       description: >
-        @Login
-        @Page
+        获取个人订单
       operationId: getMyOrders
+      x-server-parameters:
+        - Page
+        - Pagination
+        - Login
+        - Request
+        - Response
+        - MultipartFile
+        - MultipartHttpServletRequest
       parameters:
         - name: status
           in: query
@@ -170,6 +177,7 @@ components:
           description: 支付方式
         amount:
           type: number
+          default: 0
           description: 订单总额
         payment:
           type: number
@@ -180,7 +188,7 @@ components:
           description: 订单创建时间
         finishTime:
           type: string
-          format: date-time
+          format: 'date-time'
           description: 订单完成时间
         tradeOrderGoods:
           $ref: "#/components/schemas/TradeOrderGoodsDto"
@@ -225,4 +233,3 @@ components:
         - TIMEOUT
         - EXCEPTION
         - REBATES
-        - CANCEL

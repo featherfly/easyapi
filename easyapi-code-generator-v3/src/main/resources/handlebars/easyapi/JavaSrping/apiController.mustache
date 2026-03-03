@@ -165,6 +165,8 @@ public class {{classname}}Controller {
     {{/implicitHeaders}}
     {{/useOas2}}
     {{^useOas2}}
+    {{#tags}}@Tag(name = "{{name}}", description = "{{description}}")
+    {{/tags}}
     @Operation(summary = "{{{summary}}}", description = "{{{notes}}}"{{#hasAuthMethods}}, security = {
         {{#authMethods}}@SecurityRequirement(name = "{{name}}"{{#isOAuth}}, scopes = {
         {{#each scopes}}"{{@key}}"{{^@last}},

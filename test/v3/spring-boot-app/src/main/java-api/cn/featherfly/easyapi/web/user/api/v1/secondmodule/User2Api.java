@@ -9,7 +9,7 @@ import java.util.Optional;
  * A delegate to be called by the {@link User2ApiController}}.
  * Implement this interface with a {@link org.springframework.stereotype.Service} annotated class.
  */
-@jakarta.annotation.Generated(value = "cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen", date = "2026-02-06T16:12:02.900418+08:00[Asia/Shanghai]")
+@jakarta.annotation.Generated(value = "cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen", date = "2026-03-03T15:45:34.387696200+08:00[Asia/Shanghai]")
 public interface User2Api {
 
     /**

@@ -1,10 +1,15 @@
 ext {
     springBootVersion = "4.0.2"
-    springVersion = "7.0.3"
+    springVersion = "7.0.5"
+//    springBootVersion = "3.5.11"
+//    springVersion = "6.2.16"
+
     lv = '2.25.3'
 
     ffconversion = 'cn.featherfly:featherfly-conversion:1.5.1'
     ffoffice = 'cn.featherfly:featherfly-data-office:0.2.0'
+
+//    springdocui = 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
 }
 sourceSets {
     main {
@@ -22,8 +27,8 @@ dependencies {
     implementation ffoffice
     implementation 'cn.featherfly.common:common-functional:0.3.0'
     implementation 'cn.featherfly.common:common-spring:0.3.0'
-//    implementation 'cn.featherfly:featherfly-web-springmvc:0.4.18'
-    implementation 'cn.featherfly:featherfly-web-springmvc:1.0.2'
+//    implementation 'cn.featherfly.web:web-jakarta:1.4.0'
+    implementation 'cn.featherfly:featherfly-web-springmvc:1.0.3'
     // spring boot
 //    implementation "org.springframework:spring-webmvc:7.0.3'
 //    implementation "org.springframework.boot:spring-boot-starter-web:3.5.10'
@@ -86,8 +91,9 @@ configurations.all {
     resolutionStrategy {
         // force certain versions of dependencies (including transitive)
         //  *append new forced modules:
-        force ffconversion, ffoffice
+        force ffconversion, ffoffice/*, springdocui*/
         //  *replace existing forced modules with new ones:
-        forcedModules = [ffconversion, ffoffice]
+        forcedModules = [ffconversion, ffoffice/*, springdocui*/
+        ]
     }
 }

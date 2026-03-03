@@ -31,7 +31,7 @@ import jakarta.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@jakarta.annotation.Generated(value = "cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen", date = "2026-02-06T16:12:02.900418+08:00[Asia/Shanghai]")
+@jakarta.annotation.Generated(value = "cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen", date = "2026-03-03T15:45:34.387696200+08:00[Asia/Shanghai]")
 @RestController
 @RequestMapping(value = "/api/v1")
 public class UserApiController {

@@ -14,12 +14,12 @@ public class TypeScriptAxiosCodegenTest {
     public static void api(String yaml, String module) {
         final String configFile = "api/admin-config.json";
         //        TypeScriptAxiosCodegen codegen = new TypeScriptAxiosCodegen(module);
+//        TypeScriptAxiosCodegen2 codegen = new TypeScriptAxiosCodegen2();
         TypeScriptAxiosCodegen codegen = new TypeScriptAxiosCodegen();
         codegen.setOutputDir(Constants.TS_AXIOS_OUT_DIR);
         codegen.setWrapResponse(true);
         codegen.setModule(module);
         codegen.setSecondModule("secondmodule");
-        codegen.setOutputDir(Constants.TS_AXIOS_OUT_DIR);
 
         EasyapiGenerator code = new EasyapiGenerator(codegen);
         //        code.setConfigFile("src/test/resources/api/admin-config.json");

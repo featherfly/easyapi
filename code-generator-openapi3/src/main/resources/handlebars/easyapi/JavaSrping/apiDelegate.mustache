@@ -70,7 +70,8 @@ public interface {{classname}} {
 {{/parameters}}
 {{#returnType}}     * @return {{{returnType}}} {{/returnType}}
      */
-    {{#defaultInterfaces}}default {{/defaultInterfaces}}{{#responseWrapper}}{{.}}<{{/responseWrapper}}{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}{{#responseWrapper}}>{{/responseWrapper}} {{operationId}}({{#parameters}}{{^isBinary}} {{>optionalDataType}} {{/isBinary}}{{#isBinary}}MultipartFile{{/isBinary}} {{paramName}}
+    {{#defaultInterfaces}}default {{/defaultInterfaces}}{{#responseWrapper}}{{
+    .}}<{{/responseWrapper}}{{#returnType}}{{>returnTypes}}{{/returnType}}{{^returnType}}void{{/returnType}}{{#responseWrapper}}>{{/responseWrapper}} {{operationId}}({{#parameters}}{{^isBinary}} {{>optionalDataType}} {{/isBinary}}{{#isBinary}}MultipartFile{{/isBinary}} {{paramName}}
     {{#hasMore}},{{/hasMore}}{{/parameters}}){{^defaultInterfaces}};{{/defaultInterfaces}}{{#defaultInterfaces}} {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
         {{#examples}}

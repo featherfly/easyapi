@@ -1,0 +1,18 @@
+{
+    "modelPackage": "cn.featherfly.jbox.{module}.admin.api.v1.{secondModule}.dto",
+    "apiPackage": "cn.featherfly.jbox.{module}.admin.api.v1.{secondModule}",
+    "invokerPackage": "cn.featherfly.jbox.{module}.admin.api.v1.{secondModule}",
+    "groupId": "cn.featherfly.jbox",
+    "artifactId": "admin",
+    "artifactVersion": "1.0.0",
+    "title": "jbox-admin-apis",
+    "jakarta": true,
+    "java8": true,
+    "delegatePattern": true,
+    "dateLibrary": "java8-localdatetime",
+    "defaultInterfaces": false,
+    "validationMode": "legacy",
+    "useBeanValidation": true,
+    "library": "spring-boot3",
+    "springBoot3Version": "3.4.2"
+}

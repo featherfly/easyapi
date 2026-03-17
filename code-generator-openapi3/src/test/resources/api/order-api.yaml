@@ -42,7 +42,7 @@ paths:
         - trade-order
       summary: 获取支付需要的参数
       description: >
-        @Login
+        @Login @Page
       operationId: getPayment
       parameters:
         - name: orderNo

@@ -9,8 +9,7 @@ import cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen;
 
 public class SpringMvcCodegenTest {
 
-    public static void generate(String yaml, String module) {
-        final String configFile = "api/admin-config.json";
+    public static void generate(String configFile, String yaml, String module) {
         AbstractSpringCodegen codegen = new EasyapiSpringMvcCodegen();
         codegen.addExtParameter(new ExtParameter("Login", new ExtCodegenParameter(true, false),
                 "cn.featherfly.jbox.web.admin.permission.AdminLoginInfo", "AdminLoginInfo", "loginInfo", "当前登录用户信息"));
@@ -47,7 +46,11 @@ public class SpringMvcCodegenTest {
     }
 
     public static void main(String[] args) {
-        generate("api/user.yaml", "user");
-        generate("api/order-api.yaml", "order");
+        final String configFile = "api/admin-config.json";
+//        generate(configFile, "api/user.yaml", "user");
+//        generate(configFile, "api/order-api.yaml", "order");
+//        generate("jbox/config.json", "jbox/rbac-application-api.yaml", "rbac");
+//        generate("jbox/config.json", "jbox/rbac-component-api.yaml", "rbac");
+        generate("jbox/config.json", "jbox/message.yaml", "rbac");
     }
 }

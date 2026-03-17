@@ -12,17 +12,6 @@ public class EasyapiSpringMvcCodegen extends AbstractSpringCodegen {
     public EasyapiSpringMvcCodegen() {
         super();
 
-
-    }
-
-    @Override
-    public void processOpts() {
-        super.processOpts();
-
-        setTitle("easyapi spring clound server side");
-        //apiTemplateFiles.put("api.mustache", ".java");
-        //apiTemplateFiles.put("apiController.mustache", ".java");
-        //apiTemplateFiles.put("apiDelegate.mustache", ".java");
         addExtParameter(new ExtParameter("Request", new ExtCodegenParameter(false, true),
                 "jakarta.servlet.http.HttpServletRequest", "HttpServletRequest", "request", "http servlet request"));
 
@@ -41,6 +30,17 @@ public class EasyapiSpringMvcCodegen extends AbstractSpringCodegen {
 
         addExtParameter(new ExtParameter("Pagination", new ExtCodegenParameter(false, true),
                 Pagination.class.getName(), Pagination.class.getSimpleName(), "pagination", "auto generate pagination with request parameters"));
+    }
+
+    @Override
+    public void processOpts() {
+        super.processOpts();
+
+        setTitle("easyapi spring clound server side");
+        //apiTemplateFiles.put("api.mustache", ".java");
+        //apiTemplateFiles.put("apiController.mustache", ".java");
+        //apiTemplateFiles.put("apiDelegate.mustache", ".java");
+
 
         apiTemplateFiles.remove("api.mustache");
     }

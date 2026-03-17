@@ -44,7 +44,7 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
             if (notes != null) {
                 List<CodegenParameter> codegenParameters = new ArrayList<>();
                 getExtParameters().forEach(extParameter -> {
-                    if (notes.contains(extParameter.getName())) {
+                    if (notes.contains("@" + extParameter.getName())) {
                         codegenParameters.add(extParameter.getCodegenParameter().copy());
                     }
                 });

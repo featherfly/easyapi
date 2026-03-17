@@ -1,0 +1,162 @@
+openapi: 3.0.2
+info:
+  title: message
+  description: >
+    消息有关的api
+  termsOfService: http://api.cdzkdc.com/terms/
+  contact:
+    email: zhongj@cdzkdc.com
+  # license:
+  #   name: Apache 2.0
+  #   url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://dev.app.cdzkdc.com/api/v1
+  - url: http://dev.app.cdzkdc.com/api/v1
+tags:
+  - name: message
+    description: 消息有关的api
+paths:
+  /message:
+    get:
+      tags:
+          - message
+      summary: 消息查询接口
+      description:  >
+        消息查询接口
+        @Page
+        @Login
+      operationId: getMessageList
+#      x-server-parameters:
+#        - Page
+#        - Login
+      parameters:
+        - name: title
+          in: query
+          description: 主题
+          schema:
+            type: string
+        - name: p
+          in: query
+          description: 页数
+          schema:
+            type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagesDto"
+
+  /message/delete:
+    delete:
+      tags:
+            - message
+      summary: 删除消息
+      operationId: delete
+      parameters:
+        - name: id
+          in: query
+          description: 主键id
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: successful operation
+components:
+  schemas:
+    MessagesDto:
+      description: 消息返回结果集
+      type: object
+      properties:
+        messageDots:
+          type: array
+          items:
+            $ref : "#/components/schemas/MessageQueryDto"
+        total:
+          type: integer
+          format: int64
+          description: 总数
+
+    MessageQueryDto:
+      description: 消息返回结果
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+          description: 标题
+        content:
+          type: string
+          description: 内容
+        createTime:
+          type: string
+          format: date-time
+          description: 创建时间
+        deleted:
+          type: boolean
+          description: 是否删除
+        MessageUserList:
+          items:
+            $ref : "#/components/schemas/MessageQueryUserDto"
+          description: 接收人数组
+
+
+
+
+
+    MessageUsersDto:
+      description: 消息用户返回结果集
+      type: object
+      properties:
+        messageUserDots:
+          type: array
+          items:
+            $ref : "#/components/schemas/MessageQueryUserDto"
+        total:
+          type: integer
+          format: int64
+          description: 总数
+
+
+    MessageQueryUserDto:
+      description: 消息用户返回结果
+      type: object
+      properties:
+        messageId:
+          type: integer
+          format: int64
+        messageUserId:
+          type: integer
+          format: int64
+        senderName:
+          type: string
+          description: 发送人名称
+        receiverName:
+          type: string
+          description: 接收人名称
+        title:
+          type: string
+          description: 标题
+        content:
+          type: string
+          description: 内容
+        source:
+          type: string
+          description: 消息来源
+        messageType:
+          type: string
+          description: 消息状态
+        createTime:
+          type: string
+          format: date-time
+          description: 创建时间
+        deleted:
+          type: boolean
+          description: 是否删除
+
+

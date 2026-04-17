@@ -13,102 +13,8 @@ servers:
 tags:
   - name: trade-order
     description: 交易订单
-paths:
-  "/orders":
-    post:
-      tags:
-        - trade-order
-      summary: 创建产品订单
-      description: >
-        @Login
-      operationId: create
-      requestBody:
-        description: 产品订单信息
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TradeOrderSubmitDto"
-        required: true
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TradeOrderPaymentDto"
-  "/orders/no-{orderNo}/payment":
-    get:
-      tags:
-        - trade-order
-      summary: 获取支付需要的参数
-      description: >
-        @Login @Page
-      operationId: getPayment
-      parameters:
-        - name: orderNo
-          required: true
-          in: path
-          schema:
-            type: string
-          description: 订单号
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TradeOrderPaymentDto"
-  "/orders/my":
-    get:
-      tags:
-        - trade-order
-      summary: 获取个人订单
-      description: >
-        获取个人订单
-      operationId: getMyOrders
-      x-server-parameters:
-        - Page
-        - Pagination
-        - Login
-        - Request
-        - Response
-        - MultipartFile
-        - MultipartHttpServletRequest
-      parameters:
-        - name: status
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/OrderStatus"
-          description: 订单号
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "../admin/order-api.yaml#/components/schemas/PagingOrderDto"
 components:
   schemas:
-    TradeOrderSubmitDto:
-      required:
-        - shelfId
-        - wxAppId
-        - paymentPlatform
-      properties:
-        shelfId:
-          type: integer
-          format: int64
-          description: 货架ID
-        wxAppId:
-          type: string
-          description: 微信公众号ID
-        paymentPlatform:
-          $ref: "#/components/schemas/PaymentPlatform"
-        tradeOrderGoods:
-          type: array
-          items:
-            $ref: "#/components/schemas/TradeOrderGoodsSubmitDto"
     TradeOrderGoodsSubmitDto:
       required:
         - goodsId
@@ -163,18 +69,10 @@ components:
           type: integer
           format: int64
           description: 下单人ID
-        shelfId:
-          type: integer
-          format: int64
-          description: 货架ID
         status:
           type: integer
           format: int32
           description: 订单状态(0未消费,1支付中,2交易成功,3超时取消,4已取消,5异常,6已支付,8退款中,9退款成功,10订单已完成返利)
-        paymentPlatform:
-          type: integer
-          format: int32
-          description: 支付方式
         amount:
           type: number
           default: 0
@@ -190,8 +88,24 @@ components:
           type: string
           format: 'date-time'
           description: 订单完成时间
+        tags:
+          type: array
+          items:
+            type: string
+        paymentPlatform:
+          $ref: "#/components/schemas/PaymentPlatform"
+        supportPaymentPlatforms:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentPlatform"
+        supportPaymentPlatformList:
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentPlatform"
         tradeOrderGoods:
-          $ref: "#/components/schemas/TradeOrderGoodsDto"
+          type: array
+          items:
+            $ref: "#/components/schemas/TradeOrderGoodsDto"
     TradeOrderGoodsDto:
       x-convertor:
         - cn.featherfly.easyapi.domain.TradeOrderGoods
@@ -225,19 +139,3 @@ components:
         - WECHAT
         - ALIPAY
       description: 支付平台
-    OrderStatus:
-      type: string
-      enum:
-        - NOTSPEND
-        - PAYMENTING
-        - PAYED
-        - DELIVERING
-        - DELIVERED
-        - DELIVERING_EXCEPTION
-        - SUCCESS
-        - REFUNDING
-        - REFUND
-        - CANCEL
-        - TIMEOUT
-        - EXCEPTION
-        - REBATES

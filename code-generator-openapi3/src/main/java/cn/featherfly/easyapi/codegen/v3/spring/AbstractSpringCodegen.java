@@ -67,6 +67,11 @@ public abstract class AbstractSpringCodegen extends SpringCodegen
         return objs;
     }
 
+    @Override
+    public Map<String, Object> postProcessAllModels(Map<String, Object> objs) {
+        return postProcessAllModels0(super.postProcessAllModels(objs));
+    }
+
     protected void setTemplateEngine() {
         String templateEngineKey = additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE) != null ? additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE).toString() : null;
 

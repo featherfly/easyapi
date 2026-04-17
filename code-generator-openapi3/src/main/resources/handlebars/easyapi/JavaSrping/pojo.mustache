@@ -136,4 +136,12 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
     }
     return o.toString().replace("\n", "\n    ");
   }
+{{#vendorExtensions}}
+{{#convertors}}
+
+{{{to}}}
+
+{{{from}}}
+{{/convertors}}
+{{/vendorExtensions}}
 }

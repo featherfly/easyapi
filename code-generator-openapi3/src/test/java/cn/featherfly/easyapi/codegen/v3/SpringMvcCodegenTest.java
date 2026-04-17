@@ -6,10 +6,12 @@ import cn.featherfly.easyapi.codegen.ExtCodegenParameter;
 import cn.featherfly.easyapi.codegen.ExtParameter;
 import cn.featherfly.easyapi.codegen.v3.spring.AbstractSpringCodegen;
 import cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class SpringMvcCodegenTest {
 
-    public static void generate(String configFile, String yaml, String module) {
+    public void generate(String configFile, String yaml, String module) {
         AbstractSpringCodegen codegen = new EasyapiSpringMvcCodegen();
         codegen.addExtParameter(new ExtParameter("Login", new ExtCodegenParameter(true, false),
                 "cn.featherfly.jbox.web.admin.permission.AdminLoginInfo", "AdminLoginInfo", "loginInfo", "当前登录用户信息"));
@@ -23,10 +25,10 @@ public class SpringMvcCodegenTest {
         codegen.setSecondModule("secondmodule");
 
         EasyapiGenerator generator = new EasyapiGenerator(codegen);
-        generator.setGenerateApis(true);
-        generator.setGenerateModels(true);
-        generator.setGenerateApiDocs(true);
-        generator.setGenerateModelDocs(true);
+        generator.setGenerateApis(generateApis);
+        generator.setGenerateModels(generateModels);
+        generator.setGenerateApiDocs(generateApiDocs);
+        generator.setGenerateModelDocs(generateModelDocs);
         generator.setGenerateTests(true);
         generator.setGenerateSupportingFiles(false);
         generator.setGenerateSwaggerMetadata(false);
@@ -45,12 +47,33 @@ public class SpringMvcCodegenTest {
         generator.generate(yaml, configFile);
     }
 
-    public static void main(String[] args) {
+    private boolean generateApis = true;
+    private boolean generateModels = true;
+    private boolean generateApiDocs = true;
+    private boolean generateModelDocs = true;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        generateApis = true;
+        generateModels = true;
+        generateApiDocs = true;
+        generateModelDocs = true;
+    }
+
+    @Test
+    public void genrateAll() {
         final String configFile = "api/admin-config.json";
-//        generate(configFile, "api/user.yaml", "user");
-//        generate(configFile, "api/order-api.yaml", "order");
+        generate(configFile, "api/user.yaml", "user");
+        generate(configFile, "api/order-api.yaml", "order");
 //        generate("jbox/config.json", "jbox/rbac-application-api.yaml", "rbac");
 //        generate("jbox/config.json", "jbox/rbac-component-api.yaml", "rbac");
-        generate("jbox/config.json", "jbox/message.yaml", "rbac");
+//        generate("jbox/config.json", "jbox/message.yaml", "rbac");
+    }
+
+    @Test
+    public void generateDtoOnly() {
+        generateApis = false;
+        final String configFile = "api/admin-config.json";
+        generate(configFile, "api/order-dto.yaml", "order");
     }
 }

@@ -9,15 +9,15 @@ public interface Constants {
 
     String CURRENT_ROOT_DIR = "../code-generator-openapi3";
 
-    String GEN_OUT_DIR = CURRENT_ROOT_DIR + "/src/test";
+    String GEN_OUT_DIR = CURRENT_ROOT_DIR + "/src/gen";
 
-    String ANDROID_OUT_DIR = CURRENT_ROOT_DIR + "/src/test/android";
+    String ANDROID_OUT_DIR = CURRENT_ROOT_DIR + "/src/gen/android";
 
-    String SPRING_CLOUND_OUT_DIR = CURRENT_ROOT_DIR + "/src/test/springclound";
+    String SPRING_CLOUND_OUT_DIR = CURRENT_ROOT_DIR + "/src/gen/springclound";
 
-    String SPRINGMVC_OUT_DIR = CURRENT_ROOT_DIR + "/src/test/springmvc";
+    String SPRINGMVC_OUT_DIR = CURRENT_ROOT_DIR + "/src/gen/springmvc";
 
-    String SPRINGMVC_OUT_DIR_V3 = CURRENT_ROOT_DIR + "/src/test/springmvcv3";
+    String SPRINGMVC_OUT_DIR_V3 = CURRENT_ROOT_DIR + "/src/gen/springmvc-v3";
 
-    String TS_AXIOS_OUT_DIR = CURRENT_ROOT_DIR + "/src/test/ts-axios";
+    String TS_AXIOS_OUT_DIR = CURRENT_ROOT_DIR + "/src/gen/ts-axios";
 }

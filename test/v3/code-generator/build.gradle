@@ -22,7 +22,7 @@ dependencies {
 
 //    compileOnly 'org.openapitools:openapi-generator-cli:7.19.0'
 
-    testImplementation 'cn.featherfly.easyapi:easyapi-code-generator-v3:0.1.0-SNAPSHOT'
+    testImplementation 'cn.featherfly.easyapi:code-generator-openapi3:0.2.2-SNAPSHOT'
 
     testImplementation 'org.testng:testng:7.5.1'
 

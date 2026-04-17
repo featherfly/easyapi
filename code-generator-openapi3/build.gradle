@@ -34,7 +34,7 @@ sourceSets {
     test {
         java {
             srcDir 'src/gen/java'
-            srcDir 'src/gen/springmvcv3/java'
+            srcDir 'src/gen/springmvc-v3'
             srcDir 'src/gen/android/java'
             srcDir 'src/gen/springclound/java-api'
             srcDir 'src/gen/springclound/java-client'
@@ -46,6 +46,7 @@ sourceSets {
 dependencies {
     api ffcommon
     api 'cn.featherfly.common:common-functional:0.3.0'
+    api 'cn.featherfly.conversion:conversion-codegen:0.1.0-SNAPSHOT'
 //    api swagger
     api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.59'
     // swagger command line

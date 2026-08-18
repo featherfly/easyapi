@@ -1,3 +1,10 @@
+# 0.2.3 2026-08-18
+feat:
+1. add convertor for model object with x-convertor argument in model part
+
+chore:
+1. upgrade dependencies
+
 # 0.2.2 2026-03-05
 1. 修复@Tag未导入的问题
 

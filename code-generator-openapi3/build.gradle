@@ -7,7 +7,7 @@ allprojects {
     apply from: rootDir.getAbsolutePath() +  '/gradle/maven_push.gradle'
     
     ext {
-        ffcommon = "cn.featherfly.common:common-core:1.16.0"
+        ffcommon = "cn.featherfly.common:common-core:1.16.1"
     }   
 
     dependencies {
@@ -46,9 +46,9 @@ sourceSets {
 dependencies {
     api ffcommon
     api 'cn.featherfly.common:common-functional:0.3.0'
-    api 'cn.featherfly.conversion:conversion-codegen:0.1.0-SNAPSHOT'
+    api 'cn.featherfly.conversion:conversion-codegen:0.1.0'
 //    api swagger
-    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.59'
+    api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.62'
     // swagger command line
 //    api 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.76'
 

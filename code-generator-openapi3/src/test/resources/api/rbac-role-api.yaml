@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info:
+  title: 角色接口定义
+  description: >
+    角色接口定义
+  termsOfService: http://jbox.featherfly.cn/terms/
+  contact:
+    email: featherfly@foxmail.com
+  version: 1.0.0
+servers:
+  - url: https://jbox.featherfly.cn/api/v1
+  - url: http://jbox.featherfly.cn/api/v1
+tags:
+  - name: role
+    description: 角色
+paths:
+components:
+  schemas:
+    RoleDto:
+      allOf:
+        - $ref: "#/components/schemas/RoleSaveInput"
+      description: 角色更新
+      x-convertor:
+        - cn.featherfly.jbox.rbac.domain.Role
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: 权限主键
+    RoleSaveInput:
+      x-convertor:
+        - cn.featherfly.jbox.rbac.domain.Role
+      properties:
+        name:
+          type: string
+          description: 权限名称
+        bindType:
+          type: string
+          enum:
+            - NONE
+            - AUTO_BIND_ALL
+            - AUTO_BIND_USER
+            - AUTO_BIND_PRIVILEGE
+          description: 允许手动绑定的类型

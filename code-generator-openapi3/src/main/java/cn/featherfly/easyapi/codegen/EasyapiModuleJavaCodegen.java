@@ -178,6 +178,11 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
                     if (om != null) {
                         properties.add(new ConvertiblePropertyImpl(var.getName(), new TypeMetadataImpl(om.get("package") + "." + var.getDatatype(),
                                 isEnum(om)), new TypeMetadataImpl(bd.getBeanProperty(var.getName()).getType())));
+                    } else if (var.getEnumName() != null) {
+                        final Map<String, Object> modelMap = (Map<String, Object>) objs.get(model.name);
+                        properties.add(new ConvertiblePropertyImpl(var.getName(), new TypeMetadataImpl(modelMap.get(
+                                "package") + "." + model.name + "." + var.getEnumName(), true),
+                                new TypeMetadataImpl(bd.getBeanProperty(var.getName()).getType())));
                     } else {
                         TypeMetadata typeMetadata = getType(var.getDatatype(), objs);
                         if (typeMetadata.elementType() == null) {

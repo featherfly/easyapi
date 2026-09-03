@@ -1,3 +1,10 @@
+# 0.3.0 2026-09-03
+feat：
+1. code generation for conversion when request parameters are defined as enum
+
+chore:
+1. upgrade dependencies
+
 # 0.2.3 2026-08-18
 feat:
 1. add convertor for model object with x-convertor argument in model part

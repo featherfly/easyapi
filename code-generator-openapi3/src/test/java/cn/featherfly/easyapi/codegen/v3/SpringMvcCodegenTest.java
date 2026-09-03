@@ -74,6 +74,7 @@ public class SpringMvcCodegenTest {
     public void generateDtoOnly() {
         generateApis = false;
         final String configFile = "api/admin-config.json";
-        generate(configFile, "api/order-dto.yaml", "order");
+//        generate(configFile, "api/order-dto.yaml", "order");
+        generate(configFile, "api/rbac-role-api.yaml", "rbac");
     }
 }

@@ -2,6 +2,8 @@ package cn.featherfly.easyapi.domain;
 
 import java.time.LocalDateTime;
 
+import cn.featherfly.common.model.app.Platform;
+
 /**
  * The type User.
  *
@@ -24,6 +26,11 @@ public class User {
     private Integer smokingAge;
 
     private Integer earning;
+
+    private Boolean available;
+
+    private Platform[] platforms;
+    private Platform platform;
 
     public enum Gender {
         MALE,
@@ -92,5 +99,29 @@ public class User {
 
     public void setEarning(Integer earning) {
         this.earning = earning;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+    public Platform[] getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(Platform[] platforms) {
+        this.platforms = platforms;
+    }
+
+    public Platform getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(Platform platform) {
+        this.platform = platform;
     }
 }

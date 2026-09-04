@@ -34,7 +34,7 @@ sourceSets {
     test {
         java {
             srcDir 'src/gen/java'
-            srcDir 'src/gen/springmvc-v3'
+//            srcDir 'src/gen/springmvc-v3'
             srcDir 'src/gen/android/java'
             srcDir 'src/gen/springclound/java-api'
             srcDir 'src/gen/springclound/java-client'
@@ -46,7 +46,7 @@ sourceSets {
 dependencies {
     api ffcommon
     api 'cn.featherfly.common:common-functional:0.3.0'
-    api 'cn.featherfly.conversion:conversion-codegen:0.1.1'
+    api 'cn.featherfly.conversion:conversion-codegen:0.2.0'
 //    api swagger
     api 'io.swagger.codegen.v3:swagger-codegen-generators:1.0.62'
     // swagger command line
@@ -76,6 +76,8 @@ dependencies {
     testImplementation 'tools.jackson.core:jackson-databind:3.0.4'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.21.0'
 //    testImplementation "io.swagger.core.v3:swagger-annotations-jakarta:2.2.52"
+
+    testImplementation "cn.featherfly.common:common-model:0.4.0"
 
 //    testImplementation 'org.springframework:spring-core:6.1.8'
 //    testImplementation 'org.springframework:spring-webmvc:6.1.8'

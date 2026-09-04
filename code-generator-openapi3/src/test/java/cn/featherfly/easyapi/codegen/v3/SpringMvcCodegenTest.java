@@ -1,13 +1,19 @@
 package cn.featherfly.easyapi.codegen.v3;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import cn.featherfly.common.model.app.Platform;
+import cn.featherfly.conversion.codegen.BeanCodegen;
+import cn.featherfly.conversion.codegen.BeanCodegenImpl;
+import cn.featherfly.easyapi.PlatformToStringConvertorCodegen;
+import cn.featherfly.easyapi.PlatformToStringPropertyCodegen;
 import cn.featherfly.easyapi.codegen.Constants;
 import cn.featherfly.easyapi.codegen.EasyapiGenerator;
 import cn.featherfly.easyapi.codegen.ExtCodegenParameter;
 import cn.featherfly.easyapi.codegen.ExtParameter;
 import cn.featherfly.easyapi.codegen.v3.spring.AbstractSpringCodegen;
 import cn.featherfly.easyapi.codegen.v3.spring.EasyapiSpringMvcCodegen;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class SpringMvcCodegenTest {
 
@@ -23,6 +29,15 @@ public class SpringMvcCodegenTest {
         codegen.setOutputDir(Constants.SPRINGMVC_OUT_DIR_V3);
         codegen.setModule(module);
         codegen.setSecondModule("secondmodule");
+
+        BeanCodegen beanCodegen = BeanCodegenImpl.builder()
+                .setIndentStart(1)
+                .addPropertyCodegen(Platform.class, String.class, new PlatformToStringPropertyCodegen())
+                .addPropertyCodegen(String.class, Platform.class, new PlatformToStringPropertyCodegen(true))
+                .addConvertorCodegen(Platform.class, String.class, new PlatformToStringConvertorCodegen())
+                .addConvertorCodegen(String.class, Platform.class, new PlatformToStringConvertorCodegen(true))
+                .build();
+        codegen.setBeanCodegen(beanCodegen);
 
         EasyapiGenerator generator = new EasyapiGenerator(codegen);
         generator.setGenerateApis(generateApis);
@@ -75,6 +90,7 @@ public class SpringMvcCodegenTest {
         generateApis = false;
         final String configFile = "api/admin-config.json";
 //        generate(configFile, "api/order-dto.yaml", "order");
-        generate(configFile, "api/rbac-role-api.yaml", "rbac");
+//        generate(configFile, "api/rbac-role-api.yaml", "rbac");
+        generate(configFile, "api/user.yaml", "user");
     }
 }

@@ -2,6 +2,8 @@ package cn.featherfly.easyapi.codegen.v3.spring;
 
 import cn.featherfly.common.bean.BeanUtils;
 import cn.featherfly.common.lang.Str;
+import cn.featherfly.conversion.codegen.BeanCodegen;
+import cn.featherfly.conversion.codegen.BeanCodegenImpl;
 import cn.featherfly.easyapi.codegen.EasyapiModuleJavaCodegen;
 import cn.featherfly.easyapi.codegen.EnableExtParameters;
 import cn.featherfly.easyapi.codegen.ExtParameter;
@@ -30,6 +32,8 @@ public abstract class AbstractSpringCodegen extends SpringCodegen
     protected String defaultApiPath = "/v1/api";
 
     protected Set<ExtParameter> extParameters = new LinkedHashSet<>();
+
+    protected BeanCodegen beanCodegen = BeanCodegenImpl.builder().setIndentStart(1).build();
 
     public AbstractSpringCodegen() {
         super();
@@ -198,5 +202,16 @@ public abstract class AbstractSpringCodegen extends SpringCodegen
     @Override
     public void setConfigPackage(String configPackage) {
         this.configPackage = Str.format(configPackage, BeanUtils.toMap(this));
+    }
+
+
+    @Override
+    public void setBeanCodegen(BeanCodegen beanCodegen) {
+        this.beanCodegen = beanCodegen;
+    }
+
+    @Override
+    public BeanCodegen getBeanCodegen() {
+        return beanCodegen;
     }
 }

@@ -2,6 +2,7 @@ package cn.featherfly.easyapi.codegen.v3.spring;
 
 import cn.featherfly.common.structure.page.Page;
 import cn.featherfly.common.structure.page.Pagination;
+import cn.featherfly.conversion.codegen.BeanCodegen;
 import cn.featherfly.easyapi.codegen.ExtCodegenParameter;
 import cn.featherfly.easyapi.codegen.ExtParameter;
 

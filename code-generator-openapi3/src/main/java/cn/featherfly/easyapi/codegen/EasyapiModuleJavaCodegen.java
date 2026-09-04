@@ -12,6 +12,7 @@ import io.swagger.codegen.v3.*;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Schema;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.*;
@@ -28,11 +29,8 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
     public static final String X_SERVER_PARAMETERS = "x-server-parameters";
 
     public default CodegenOperation fromOperation(CodegenOperation op,
-                                                  ThConsumer<EasyapiModuleJavaCodegen, CodegenContent,
-                                                          List<CodegenParameter>> addParameters,
-                                                  String path, String httpMethod,
-                                                  Operation operation,
-                                                  Map<String, Schema> schemas, OpenAPI openAPI) {
+                                                  ThConsumer<EasyapiModuleJavaCodegen, CodegenContent, List<CodegenParameter>> addParameters,
+                                                  String path, String httpMethod, Operation operation, Map<String, Schema> schemas, OpenAPI openAPI) {
         if (!processServerParameter(op, addParameters)) {
             String notes = op.notes;
             if (notes != null) {
@@ -151,12 +149,19 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
 
     public default Map<String, Object> postProcessAllModels0(Map<String, Object> objs) {
         for (Object obj : objs.values()) {
-            processObjectConvertor(obj, objs);
+            CodegenModel model = ((CodegenModel) ((List<Map>) ((Map) obj).get("models")).get(0).get("model"));
+            for (CodegenProperty var : model.getAllVars()) {
+                // 处理isXxx,因为类型是Boolean,所以使用getXxx
+                if ("Boolean".equals(var.getDatatype()) && var.getGetter().startsWith("is")) {
+                    var.setGetter("get" + var.getNameInCamelCase());
+                }
+            }
+            processObjectConvertor(this, obj, objs);
         }
         return objs;
     }
 
-    static void processObjectConvertor(Object obj, Map<String, Object> objs) {
+    static void processObjectConvertor(EasyapiModuleJavaCodegen javaCodegen, Object obj, Map<String, Object> objs) {
         CodegenModel model = ((CodegenModel) ((List<Map>) ((Map) obj).get("models")).get(0).get("model"));
         if (model.getVendorExtensions() == null || !model.getVendorExtensions().containsKey(X_CONVERTOR)) {
             return;
@@ -166,7 +171,7 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
             return;
         }
 
-        BeanCodegen beanCodegen = new BeanCodegenImpl(1);
+        BeanCodegen beanCodegen = javaCodegen.getBeanCodegen();
         List<Map<String, String>> convertors = new ArrayList<>();
         for (String toType : convertorParameters) {
             BeanDescriptor<?> bd = BeanDescriptor.getBeanDescriptor(ClassUtils.forName(toType));
@@ -242,6 +247,7 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
     private static boolean isEnum(Map<String, Object> objectMap) {
         return isEnum((((CodegenModel) ((List<Map>) objectMap.get("models")).get(0).get("model"))));
     }
+
     private static boolean isEnum(CodegenModel codegenModel) {
         return Boolean.parseBoolean(codegenModel.getVendorExtensions().get("x-is-enum") + "");
     }
@@ -250,9 +256,8 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
         final Map<String, Object> om = (Map<String, Object>) objs.get(typeName);
         if (om != null) {
             return new TypeMetadataImpl(om.get("package") + "." + typeName, isEnum(om));
-//            return ClassUtils.forName(om.get("package") + "." + typeName);
         }
-        return null;
+        return new TypeMetadataImpl(getBasicType(typeName));
     }
 
     private static TypeMetadata getType(String basicType, Map<String, Object> objs) {
@@ -262,6 +267,15 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
         }
         return getCollectionType(basicType, objs);
     }
+
+//    static String getJavaTypeName(String type) {
+//        Class<?> classType = getBasicType(type);
+//        if (classType == null) {
+//            return type;
+//        } else {
+//            return classType.getName();
+//        }
+//    }
 
     private static Class<?> getBasicType(String basicType) {
         Class<?> type = ClassUtils.getPrimitiveType(basicType);
@@ -338,7 +352,6 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
     }
 
 
-
     public default void addAddtionalParameter(CodegenParameter params, CodegenOperation operation, String dataType,
                                               String paramName) {
         params.dataType = dataType;
@@ -378,4 +391,8 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
         im.put("import", importClass);
         imports.add(im);
     }
+
+    BeanCodegen getBeanCodegen();
+
+    void setBeanCodegen(BeanCodegen codegen);
 }

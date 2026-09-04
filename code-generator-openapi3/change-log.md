@@ -1,6 +1,10 @@
 # 0.3.0 2026-09-03
 feat：
 1. code generation for conversion when request parameters are defined as enum
+2. add BeanCodegen setter and getter for EasyapiModuleJavaCodegen
+
+fixs:
+1. fix proeprty convertor for [String|Integer|Long] to Enum
 
 chore:
 1. upgrade dependencies

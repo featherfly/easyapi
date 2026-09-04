@@ -19,46 +19,46 @@ tags:
   - name: user2
     description: 用户相关的接口2
 paths:
-  /user/my:
-    get:
-      tags:
-        - user
-      summary: 获取当前用户的用户信息
-      description: >
-        @Login
-        @Page
-      operationId: getUserMySelf
-      parameters:
-        - name: id
-          required: false
-          in: query
-          schema:
-            type: integer
-            format: int64
-          description: id
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-    put:
-      tags:
-        - user2
-      summary: 更新用户基础资料
-      description: 更新用户基础资料
-      operationId: updateUserBasicData
-      requestBody:
-        description: survey object that needs to be added to the store
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        required: true
-      responses:
-        200:
-          description: successful operation
+#  /user/my:
+#    get:
+#      tags:
+#        - user
+#      summary: 获取当前用户的用户信息
+#      description: >
+#        @Login
+#        @Page
+#      operationId: getUserMySelf
+#      parameters:
+#        - name: id
+#          required: false
+#          in: query
+#          schema:
+#            type: integer
+#            format: int64
+#          description: id
+#      responses:
+#        200:
+#          description: successful operation
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/User"
+#    put:
+#      tags:
+#        - user2
+#      summary: 更新用户基础资料
+#      description: 更新用户基础资料
+#      operationId: updateUserBasicData
+#      requestBody:
+#        description: survey object that needs to be added to the store
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/User"
+#        required: true
+#      responses:
+#        200:
+#          description: successful operation
 components:
   schemas:
     Gender:
@@ -67,13 +67,10 @@ components:
       enum:
         - MALE
         - FEMALE
-    UserSave:
+    User2:
       description: 用户信息
       x-convertor:
         - cn.featherfly.easyapi.domain.User
-      required:
-        - mobile
-        - nickname
       type: object
       properties:
         mobile:
@@ -83,30 +80,102 @@ components:
           type: string
           description: 昵称
         gender:
-          $ref: "#/components/schemas/Gender"
+          type: integer
+        available:
+          type: boolean
         birthday:
           type: string
-          format: date-time
-        headImg:
+        platform:
           type: string
-          description: 头像
-        smokingAge:
-          type: integer
-        earning:
-          type: integer
-    User:
-      allOf:
-        - $ref: "#/components/schemas/UserSave"
-      description: 用户信息
-      x-convertor:
-        - cn.featherfly.easyapi.domain.User
-      required:
-        - mobile
-        - nickname
-      type: object
-      properties:
-        id:
-          type: integer
+        platforms:
+          items:
+            type: string
+#    User3:
+#      description: 用户信息
+#      x-convertor:
+#        - cn.featherfly.easyapi.domain.User
+#      type: object
+#      properties:
+#        mobile:
+#          type: string
+#          description: 手机号码
+#        nickname:
+#          type: string
+#          description: 昵称
+#        gender:
+#          type: integer
+#          format: int64
+#    UserSave:
+#      description: 用户信息
+#      x-convertor:
+#        - cn.featherfly.easyapi.domain.User
+#      required:
+#        - mobile
+#        - nickname
+#      type: object
+#      properties:
+#        mobile:
+#          type: string
+#          description: 手机号码
+#        nickname:
+#          type: string
+#          description: 昵称
+#        gender:
+#          $ref: "#/components/schemas/Gender"
+#        birthday:
+#          type: string
+#          format: date-time
+#        headImg:
+#          type: string
+#          description: 头像
+#        smokingAge:
+#          type: integer
+#        earning:
+#          type: integer
+#    UserUpdate:
+#      description: 用户信息
+#      x-convertor:
+#        - cn.featherfly.easyapi.domain.User
+#      required:
+#        - mobile
+#        - nickname
+#      type: object
+#      properties:
+#        mobile:
+#          type: string
+#          description: 手机号码
+#        nickname:
+#          type: string
+#          description: 昵称
+#        gender:
+#          type: string
+#          description: 描述
+#          enum:
+#            - MALE
+#            - FEMALE
+#        birthday:
+#          type: string
+#          format: date-time
+#        headImg:
+#          type: string
+#          description: 头像
+#        smokingAge:
+#          type: integer
+#        earning:
+#          type: integer
+#    User:
+#      allOf:
+#        - $ref: "#/components/schemas/UserSave"
+#      description: 用户信息
+#      x-convertor:
+#        - cn.featherfly.easyapi.domain.User
+#      required:
+#        - mobile
+#        - nickname
+#      type: object
+#      properties:
+#        id:
+#          type: integer
           format: int64
   securitySchemes:
     api_key:

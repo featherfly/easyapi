@@ -5,6 +5,7 @@ import cn.featherfly.common.bean.BeanProperty;
 import cn.featherfly.common.function.ThConsumer;
 import cn.featherfly.common.lang.ClassUtils;
 import cn.featherfly.common.lang.Lang;
+import cn.featherfly.common.lang.Str;
 import cn.featherfly.common.lang.WordUtils;
 import cn.featherfly.common.structure.ChainMapImpl;
 import cn.featherfly.conversion.codegen.*;
@@ -27,6 +28,8 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
 
     public static final String X_CONVERTOR = "x-convertor";
     public static final String X_SERVER_PARAMETERS = "x-server-parameters";
+
+    static final String INDENT = "    ";
 
     public default CodegenOperation fromOperation(CodegenOperation op,
                                                   ThConsumer<EasyapiModuleJavaCodegen, CodegenContent, List<CodegenParameter>> addParameters,
@@ -176,7 +179,7 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
         for (String toType : convertorParameters) {
             BeanDescriptor<?> bd = BeanDescriptor.getBeanDescriptor(ClassUtils.forName(toType));
             String targetName = WordUtils.lowerCaseFirst(bd.getType().getSimpleName());
-            List<ConvertibleProperty> properties = new ArrayList<>(model.getVars().size());
+            List<ConvertibleProperty> properties = new ArrayList<>(model.getAllVars().size());
             for (CodegenProperty var : model.getAllVars()) {
                 if (bd.hasBeanProperty(var.getName())) {
                     final Map<String, Object> om = (Map<String, Object>) objs.get(var.getDatatype());
@@ -203,11 +206,38 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
                     }
                 }
             }
+
+            String toName = "to" + bd.getType().getSimpleName();
+            String toMethod = Str.format(
+                    "{0}/**\n{0} * {2}\n{0} * @return new {1}\n{0} */\n{0}public {1} {2}() {\n{0}{0}return {2}(new {1}());\n{0}}\n\n"
+                    , INDENT , bd.getType().getName(), toName);
+            String toMethodComment = Str.format(
+                    "{0}/**\n{0} * {2}\n{0} * @param {3} {3}\n{0} * @return argument {3}\n{0} */\n"
+                    , INDENT , bd.getType().getName(), toName, targetName);
+
+            String fromName = "from" + bd.getType().getSimpleName();
+            String constractorComment = Str.format(
+                    "{0}/**\n{0} * Instantiates a new {1}\n{0} * @param {2} {2}\n{0} */\n"
+                    , INDENT , model.name, targetName);
+            String fromMethodComment = Str.format(
+                    "{0}/**\n{0} * {1}\n{0} * @param {2} {2}\n{0} * @return this {3}\n{0} */\n"
+                    , INDENT , fromName, targetName, model.name);
             convertors.add(new ChainMapImpl<String, String>()
-                    .set("to", beanCodegen.generateToTarget(new MethodMetadataImpl("to" + bd.getType().getSimpleName())
-                            , null, bd.getTypeName(), properties, null, targetName))
-                    .set("from", beanCodegen.generateFromTarget(new MethodMetadataImpl(model.getName(), true)
-                            , model.getClassname(), bd.getTypeName(), properties, null, targetName)));
+                    .set("to", toMethod + toMethodComment +
+                            beanCodegen.generateToTarget(new MethodMetadataImpl(toName,true)
+                                    , model.name, bd.getTypeName(), properties, null, targetName)
+                    )
+                    .set("from",
+                            constractorComment +
+                            beanCodegen.generateFromTarget(new MethodMetadataImpl(model.getName(),
+                                    MethodMetadata.MethodType.CONSTRUCTOR)
+                            , model.getClassname(), bd.getTypeName(), properties, null, targetName)
+                            + "\n\n" + fromMethodComment +
+                            beanCodegen.generateFromTarget(new MethodMetadataImpl(fromName,
+                                            MethodMetadata.MethodType.METHOD)
+                                    , model.getClassname(), bd.getTypeName(), properties, null, targetName)
+                    )
+                );
         }
         model.getVendorExtensions().put("convertors", convertors);
     }

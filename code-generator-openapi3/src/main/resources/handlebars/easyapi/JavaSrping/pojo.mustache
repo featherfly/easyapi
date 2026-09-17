@@ -43,6 +43,22 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
   {{/isContainer}}
     {{/vars}}
     {{#vars}}
+    /**
+    {{#description}}
+     * Set {{{description}}}
+    {{/description}}
+    {{^description}}
+     * Set {{name}}
+    {{/description}}
+    {{#minimum}}
+     * minimum: {{minimum}}
+    {{/minimum}}
+    {{#maximum}}
+     * maximum: {{maximum}}
+    {{/maximum}}
+     * @param {{name}} {{name}}
+     * @return {{classname}}
+     */
   {{#useBeanValidation}}{{>beanValidationFluentSetter}}{{/useBeanValidation}}{{^useBeanValidation}}
     public {{classname}} {{name}}({{{datatypeWithEnum}}} {{name}}) { {{/useBeanValidation}}
         this.{{name}} = {{name}};
@@ -75,7 +91,7 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
 
     /**
     {{#description}}
-     * {{{description}}}
+     * Get {{{description}}}
     {{/description}}
     {{^description}}
      * Get {{name}}
@@ -87,7 +103,7 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
      * maximum: {{maximum}}
     {{/maximum}}
      * @return {{name}}
-     **/
+     */
  {{#vendorExtensions.extraAnnotation}}
     {{{vendorExtensions.extraAnnotation}}}
     {{/vendorExtensions.extraAnnotation}}
@@ -97,6 +113,22 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} {{#seriali
     public {{{datatypeWithEnum}}} {{getter}}() { {{/useBeanValidation}}
         return {{name}};
     }
+
+    /**
+    {{#description}}
+     * Get {{{description}}}
+    {{/description}}
+    {{^description}}
+     * Get {{name}}
+    {{/description}}
+    {{#minimum}}
+     * minimum: {{minimum}}
+    {{/minimum}}
+    {{#maximum}}
+     * maximum: {{maximum}}
+    {{/maximum}}
+     * @param {{name}} {{name}}
+     */
   {{#useBeanValidation}}{{>beanValidationSetter}}{{/useBeanValidation}}{{^useBeanValidation}}
     public void{{setter}}({{{datatypeWithEnum}}} {{name}}) { {{/useBeanValidation}}
         this.{{name}} = {{name}};

@@ -1,9 +1,14 @@
+# 0.4.0 2026-09-17
+feat:
+1. convertor generate copy methods toTarget(Target object) and fromTarget(Target object)
+2. convertor generate method add javadoc  
+
 # 0.3.0 2026-09-03
-feat：
+feat:
 1. code generation for conversion when request parameters are defined as enum
 2. add BeanCodegen setter and getter for EasyapiModuleJavaCodegen
 
-fixs:
+fix:
 1. fix proeprty convertor for [String|Integer|Long] to Enum
 
 chore:

@@ -7,7 +7,7 @@ allprojects {
     apply from: rootDir.getAbsolutePath() +  '/gradle/maven_push.gradle'
     
     ext {
-        ffcommon = "cn.featherfly.common:common-core:1.16.1"
+        ffcommon = "cn.featherfly.common:common-core:1.16.2"
     }   
 
     dependencies {

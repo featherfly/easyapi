@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import cn.featherfly.common.lang.ClassLoaderUtils;
+import cn.featherfly.common.lang.UriUtils;
 
 public class MergeDocs {
 
@@ -110,7 +111,7 @@ public class MergeDocs {
             if (rv.startsWith("./") || rv.startsWith("../")) {
                 String extFile = StringUtils.substringBefore(rv, "#");
                 if (relativePathRoot.length() > 0) {
-                    extFile = relativePathRoot + "/" + extFile;
+                    extFile = UriUtils.simplify(relativePathRoot + "/" + extFile);
                 }
                 Set<String> components = extFilesComponents.get(extFile);
                 if (components == null) {

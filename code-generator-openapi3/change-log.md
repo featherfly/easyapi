@@ -1,3 +1,7 @@
+# 0.4.1 2026-09-21
+fix:
+1. Fix the issue where an error occurred when a relative path in an OpenAPI YAML file within a JAR referenced content from another OpenAPI YAML file
+
 # 0.4.0 2026-09-17
 feat:
 1. convertor generate copy methods toTarget(Target object) and fromTarget(Target object)

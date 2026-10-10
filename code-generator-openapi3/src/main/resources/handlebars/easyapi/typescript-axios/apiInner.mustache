@@ -9,7 +9,7 @@ import { request, Response, ValidationError } from '{{apiImportPath}}'
 const BASE_PATH = "{{{basePath}}}".replace(/^http[s]?:\/\/[\w.]*/, "");
 
 {{#imports}}
-import { {{import}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}/{{import}}';
+import { {{import}} } from '{{apiRelativeToRoot}}{{tsModelPackage}}/{{snakecase import}}';
 {{/imports}}
 
 {{#operations}}

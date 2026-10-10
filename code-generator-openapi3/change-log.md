@@ -1,3 +1,7 @@
+# 0.4.2 2026-10-10
+fix:
+1. Fix the issue where TypeScript API files do not use the correct file names when importing model files.
+
 # 0.4.1 2026-09-21
 fix:
 1. Fix the issue where an error occurred when a relative path in an OpenAPI YAML file within a JAR referenced content from another OpenAPI YAML file

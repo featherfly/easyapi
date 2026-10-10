@@ -43,5 +43,6 @@ public class TypeScriptAxiosCodegenTest {
     public static void main(String[] args) {
         api("api/user.yaml", "user");
         api("api/advertising.yaml", "ad");
+        api("api/order-api.yaml", "order");
     }
 }

@@ -7,6 +7,7 @@ import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.templates.TemplateEngine;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 public class HandlebarMulitiTemplateEngine implements TemplateEngine {
@@ -39,6 +40,13 @@ public class HandlebarMulitiTemplateEngine implements TemplateEngine {
                 .templateDir(templateDir)
                 .customTemplateDir(customTemplateDir);
         final Handlebars handlebars = new Handlebars(templateLoader);
+        handlebars.registerHelper("snakecase", (context, options) -> {
+            if (context == null) return "";
+            String input = context.toString();
+            // 在大写字母前加下划线，再转小写；把空格/连字符也替换成下划线
+            return input
+                    .replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase(Locale.ROOT);
+        });
         handlebars.prettyPrint(true);
         config.addHandlebarHelpers(handlebars);
         return handlebars.compile(templateFile);

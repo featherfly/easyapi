@@ -5,9 +5,13 @@ import cn.featherfly.easyapi.codegen.EnableExtParameters;
 import cn.featherfly.easyapi.codegen.ExtParameter;
 import cn.featherfly.easyapi.codegen.ModuleAbility;
 import cn.featherfly.easyapi.codegen.WrapResponseAbility;
+import cn.featherfly.easyapi.codegen.v3.handlebars.HandlebarMulitiTemplateEngine;
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.typescript.AbstractTypeScriptClientCodegen;
 import io.swagger.codegen.v3.generators.typescript.TypeScriptAxiosClientCodegen;
+import io.swagger.codegen.v3.templates.HandlebarTemplateEngine;
+import io.swagger.codegen.v3.templates.MustacheTemplateEngine;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -34,7 +38,7 @@ public class TypeScriptAxiosCodegen extends TypeScriptAxiosClientCodegen
 
     protected String secondModule;
 
-    protected String apiImportPath = "@featherfly-yufei/easyapi-ts";
+    protected String apiImportPath = "@yufei-featherfly/easyapi-ts";
 
     public TypeScriptAxiosCodegen() {
         super();
@@ -53,6 +57,20 @@ public class TypeScriptAxiosCodegen extends TypeScriptAxiosClientCodegen
             }
         }
         return sb.toString();
+    }
+
+    protected void setTemplateEngine() {
+        String templateEngineKey = additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE) != null ? additionalProperties.get(CodegenConstants.TEMPLATE_ENGINE).toString() : null;
+
+        if (templateEngineKey == null) {
+            templateEngine = new HandlebarMulitiTemplateEngine(this);
+        } else {
+            if (CodegenConstants.HANDLEBARS_TEMPLATE_ENGINE.equalsIgnoreCase(templateEngineKey)) {
+                templateEngine = new HandlebarMulitiTemplateEngine(this);
+            } else {
+                templateEngine = new MustacheTemplateEngine(this);
+            }
+        }
     }
 
     @Override
@@ -132,9 +150,28 @@ public class TypeScriptAxiosCodegen extends TypeScriptAxiosClientCodegen
 //        return "v3/easyapi-typescript-axios";
     }
 
+//    @Override
+//    public Map<String, Object> postProcessOperations(Map<String, Object> operations) {
+//        boolean hasImports = operations.get("hasImport") != null && Boolean.parseBoolean(operations.get("hasImport").toString());
+//        if (hasImports) {
+//            List<Map<String, String>> imports = (List<Map<String, String>>) operations.get("imports");
+//
+//            for (Map<String, String> importMap : imports) {
+//                final String importValue = importMap.get("import");
+//                if (StringUtils.isNotBlank(importValue) && importValue.contains(".")) {
+//                    int index = importValue.indexOf(".");
+//                    // 这里把导入的对象改为文件名
+//                    importMap.put("import", toModelFilename(importValue.substring(index + 1)));
+//                }
+//            }
+//        }
+//        return operations;
+//    }
+
     // ------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------
+
 
     @Override
     public Collection<ExtParameter> getExtParameters() {

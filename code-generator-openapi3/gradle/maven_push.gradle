@@ -21,6 +21,18 @@ def hasSnapshotDepend() {
     return has;
 }
 
+def getCompanyRepositoryUrl() {
+    if (isReleaseBuild()) {
+        println 'RELEASE BUILD'
+        if (!hasProperty('COMPANY_RELEASE_REPOSITORY_URL')) throw new RuntimeException("property COMPANY_RELEASE_REPOSITORY_URL not set")
+        return COMPANY_RELEASE_REPOSITORY_URL
+    } else {
+        println 'SNAPSHOT BUILD'
+        if (!hasProperty('COMPANY_SNAPSHOT_REPOSITORY_URL')) throw new RuntimeException("property COMPANY_SNAPSHOT_REPOSITORY_URL not set")
+        return COMPANY_SNAPSHOT_REPOSITORY_URL
+    }
+}
+
 def getSonatypeRepositoryUrl() {
     if (isReleaseBuild()) {
         println 'RELEASE BUILD'
@@ -28,7 +40,6 @@ def getSonatypeRepositoryUrl() {
     } else {
         println 'SNAPSHOT BUILD'
         return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : "https://central.sonatype.com"
-
     }
 }
 
@@ -110,6 +121,14 @@ var privateKeyFile = project.getProperty('privateKeyFile')
 
 
 jreleaser {
+    gitRootSearch = true
+    release {
+        generic {
+            enabled = true
+            skipRelease = true   // 关键：跳过实际发布动作
+            token = "placeholder"   // 任意非空字符串即可
+        }
+    }
     signing {
         active = 'ALWAYS'
         armored = true
@@ -121,23 +140,30 @@ jreleaser {
         maven {
             mavenCentral {
                 sonatype {
-                    active = 'ALWAYS'
+                    active = 'RELEASE'
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     stagingRepository('build/staging-deploy')
+                    // authorization = "BEARER"
+                    connectTimeout = 120
+                    readTimeout = 300
+                    retryDelay = 30
+                    maxRetries = 100
                 }
             }
-            /* Legacy OSSRH
-            nexus2 {
-                'maven-central' {
+            nexus3 {
+                company {
+                    // 默认不激活，避免每次发布都上传
                     active = 'ALWAYS'
-                    url = 'https://s01.oss.sonatype.org/service/local'
-                    snapshotUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-                    closeRepository = true
-                    releaseRepository = true
+                    url = getCompanyRepositoryUrl()
                     stagingRepository('build/staging-deploy')
+                    authorization = 'BASIC'
+                    username = companyNexusUsername
+                    password = companyNexusPassword
+                    // 如果自建 Nexus 不需要 Maven Central 的那些严格校验，可以关闭
+                    applyMavenCentralRules = false
+                    // sign = false // 视 Nexus 是否要求签名而定
                 }
             }
-            */
         }
     }
 }

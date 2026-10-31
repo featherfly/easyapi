@@ -1,4 +1,11 @@
+# 0.4.3 2026-11-04
+
+feat:
+
+1. convertor generate static method createFromTarget (Target object)
+
 # 0.4.2 2026-10-10
+
 fix:
 1. Fix the issue where TypeScript API files do not use the correct file names when importing model files.
 

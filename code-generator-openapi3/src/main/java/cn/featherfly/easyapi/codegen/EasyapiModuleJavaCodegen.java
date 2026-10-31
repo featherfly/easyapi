@@ -215,13 +215,22 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
                     "{0}/**\n{0} * {2}\n{0} * @param {3} {3}\n{0} * @return argument {3}\n{0} */\n"
                     , INDENT , bd.getType().getName(), toName, targetName);
 
-            String fromName = "from" + bd.getType().getSimpleName();
             String constractorComment = Str.format(
                     "{0}/**\n{0} * Instantiates a new {1}\n{0} * @param {2} {2}\n{0} */\n"
                     , INDENT , model.name, targetName);
+            String fromName = "from" + bd.getType().getSimpleName();
             String fromMethodComment = Str.format(
                     "{0}/**\n{0} * {1}\n{0} * @param {2} {2}\n{0} * @return this {3}\n{0} */\n"
                     , INDENT , fromName, targetName, model.name);
+
+            String staticFromName = "createFrom" + bd.getType().getSimpleName();
+            String staticFromMethodComment = Str.format(
+                    "{0}/**\n{0} * {1}\n{0} * @param {2} {2}\n{0} * @return {3}\n{0} */"
+                    , INDENT , staticFromName, targetName, model.name);
+            String staticFromMethod = Str.format(
+            "{1}\n{0}public static {2} {3}({4} {5}) {\n{0}{0}if ({5} == null) return null;\n{0}{0}return new {2}({5});\n{0}}\n"
+                    , INDENT, staticFromMethodComment, model.getClassname(), staticFromName, bd.getType().getName(),targetName);
+
             convertors.add(new ChainMapImpl<String, String>()
                     .set("to", toMethod + toMethodComment +
                             beanCodegen.generateToTarget(new MethodMetadataImpl(toName,true)
@@ -236,6 +245,7 @@ public interface EasyapiModuleJavaCodegen extends EnableExtParameters, ModuleAbi
                             beanCodegen.generateFromTarget(new MethodMetadataImpl(fromName,
                                             MethodMetadata.MethodType.METHOD)
                                     , model.getClassname(), bd.getTypeName(), properties, null, targetName)
+                            + "\n\n" + staticFromMethod
                     )
                 );
         }
